@@ -66,7 +66,7 @@ fn main() {
         p
     };
 
-    fs_extra::dir::copy(format!("{}/../symbols", manifest_dir), &icons, &{
+    fs_extra::dir::copy(format!("{}/symbols", manifest_dir), &icons, &{
         let mut options = fs_extra::dir::CopyOptions::new();
         options.copy_inside = true;
         options.overwrite = true;
@@ -121,11 +121,4 @@ fn main() {
         .current_dir(resources)
         .output()
         .expect("failed to compile resources");
-
-    #[cfg(windows)]
-    {
-        let mut res = winres::WindowsResource::new();
-        res.set_icon("wix/tex-match.ico");
-        res.compile().unwrap();
-    }
 }
