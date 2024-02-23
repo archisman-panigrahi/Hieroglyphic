@@ -20,6 +20,9 @@ use std::{
     time::{Duration, Instant},
 };
 
+#[rustfmt::skip]
+mod config;
+
 #[derive(Gladis, Clone, Shrinkwrap)]
 struct App {
     #[shrinkwrap(main_field)]
@@ -94,16 +97,19 @@ fn main() {
 
         // resources.gresources is created by build.rs
         // it includes all the files in the resources directory
-        let resource_bytes =
-            include_bytes!(concat!(env!("OUT_DIR"), "/resources/resources.gresource"));
-        let resource_data = glib::Bytes::from(&resource_bytes[..]);
-        gio::resources_register(&gio::Resource::from_data(&resource_data).unwrap());
+        // let resource_bytes =
+        //     include_bytes!(concat!(env!("OUT_DIR"), "/resources/resources.gresource"));
+        // let resource_data = glib::Bytes::from(&resource_bytes[..]);
+        // gio::resources_register(&gio::Resource::from_data(&resource_data).unwrap());
+        let res =
+            gio::Resource::load(config::RESOURCES_FILE).expect("Could not load gresource file");
+        gio::resources_register(&res);
 
         // add embedded icons to theme
         let icon_theme = gtk::IconTheme::get_default().expect("failed to get default icon theme");
         icon_theme.add_resource_path("/fyi/zoey/TeX-Match/icons");
 
-        let app: App = App::from_resource("/fyi/zoey/TeX-Match/app.glade")
+        let app: App = App::from_resource("/fyi/zoey/TeX-Match/ui/window.ui")
             .unwrap_or_else(|e| panic!("failed to load app.glade: {}", e));
         app.set_application(Some(application));
 
