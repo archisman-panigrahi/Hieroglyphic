@@ -56,6 +56,7 @@ mod imp {
             }
 
             obj.setup_symbol_list();
+            obj.setup_classifier();
         }
 
         fn dispose(&self) {
@@ -113,6 +114,75 @@ impl TeXMatchWindow {
 
         self.imp().symbol_list.set_visible(true);
     }
+
+    fn setup_classifier(&self) {
+        let (req_tx, req_rx) = std::sync::mpsc::channel();
+        let (res_tx, res_rx) = async_channel::bounded(1);
+        self.imp().sender.set(req_tx).expect("Failed to set tx");
+        gio::spawn_blocking(move || {
+            tracing::info!("Classifier thread started");
+            let classifier = detexify::Classifier::default();
+
+            loop {
+                let Some(strokes) = req_rx.iter().next() else {
+                    //channel has hung up, cleanly exit
+                    tracing::info!("Exiting classifier thread");
+                    return;
+                };
+
+                let classifications: Option<Vec<detexify::Score>> = 'classify: {
+                    let Some(sample) = detexify::StrokeSample::new(strokes) else {
+                        tracing::warn!("Skipping classification on empty strokes");
+                        break 'classify None;
+                    };
+
+                    let start = Instant::now();
+                    let Some(results) = classifier.classify(sample) else {
+                        tracing::warn!("Classifier returned None");
+                        break 'classify None;
+                    };
+                    tracing::info!(
+                        "Classification complete in {}ms",
+                        start.elapsed().as_millis()
+                    );
+                    Some(results)
+                };
+
+                res_tx
+                    .send_blocking(classifications.unwrap_or_default())
+                    .expect("Failed to send classifications");
+            }
+        });
+
+        glib::spawn_future_local(glib::clone!(@weak self as window => async move {
+            tracing::debug!("Listening for classifications");
+            while let Ok(classifications) = res_rx.recv().await {
+
+                let symbols = window.symbols();
+                symbols.remove_all();
+
+                // let objs = classifications.iter().map(|score|gtk::StringObject::new(&score.id)).collect_vec();
+                // symbols.extend_from_slice(&objs);
+
+                // swicthing out all 1k symbols takes too long, so only display the first 25
+                // TODO: find faster ways and display all
+                for symbol in classifications.iter().take(25) {
+                    symbols.append(&gtk::StringObject::new(&symbol.id))
+                }
+            }
+        }));
+    }
+
+    fn classify(&self) {
+        let imp = self.imp();
+        let strokes = imp.strokes.borrow().clone();
+        imp.sender
+            .get()
+            .unwrap()
+            .send(strokes)
+            .expect("Failed to send strokes");
+    }
+
 
     #[template_callback]
     fn clear(&self, _button: &gtk::Button) {
