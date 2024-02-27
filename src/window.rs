@@ -223,7 +223,6 @@ impl TeXMatchWindow {
                 let stroke = window.imp().current_stroke.take();
                 window.imp().strokes.borrow_mut().push(stroke);
                 window.imp().drawing_area.queue_draw();
-                //TODO: trigger classifier
                 window.classify();
 
             }),
