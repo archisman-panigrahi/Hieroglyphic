@@ -1,9 +1,13 @@
+use std::time::Instant;
 
 use gtk::subclass::prelude::*;
 use gtk::{gio, glib};
+use gtk::{prelude::*, StringObject};
+use itertools::Itertools;
 
 use crate::application::TexApplication;
 use crate::config::PROFILE;
+use crate::symbol_item::SymbolItem;
 
 mod imp {
     use std::cell::{OnceCell, RefCell};
@@ -50,6 +54,8 @@ mod imp {
                 // Causes GTK_CRITICAL: investigae
                 // obj.add_css_class("devel");
             }
+
+            obj.setup_symbol_list();
         }
 
         fn dispose(&self) {
@@ -73,6 +79,39 @@ glib::wrapper! {
 impl TeXMatchWindow {
     pub fn new(app: &TexApplication) -> Self {
         glib::Object::builder().property("application", app).build()
+    }
+
+    /// Returns the symbols list store object.
+    fn symbols(&self) -> &gio::ListStore {
+        self.imp().symbols.get().expect("Failed to get symbols")
+    }
+
+    fn setup_symbol_list(&self) {
+        let mut model = gio::ListStore::new::<gtk::StringObject>();
+        model.extend(
+            detexify::iter_symbols()
+                .map(|sym| sym.id())
+                .map(gtk::StringObject::new),
+        );
+        // let model: gtk::StringList = detexify::iter_symbols().map(|symbol| symbol.id()).collect();
+        tracing::debug!("Loaded {} symbols", model.n_items());
+
+        self.imp()
+            .symbols
+            .set(model.clone())
+            .expect("Failed to set symbol model");
+
+        let selection_model = gtk::NoSelection::new(Some(model));
+        self.imp().symbol_list.bind_model(
+            Some(&selection_model),
+            glib::clone!(@weak self as window => @default-panic, move |obj| {
+                let symbol_object = obj.downcast_ref::<StringObject>().expect("The object is not of type `StringObject`.");
+                let symbol_item = SymbolItem::new(detexify::Symbol::from_id(symbol_object.string().as_str()).expect("Failed to get symbol"));
+                symbol_item.upcast()
+            }),
+        );
+
+        self.imp().symbol_list.set_visible(true);
     }
 
     #[template_callback]
