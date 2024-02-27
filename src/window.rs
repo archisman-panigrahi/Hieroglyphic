@@ -56,6 +56,7 @@ mod imp {
             }
 
             obj.setup_symbol_list();
+            obj.setup_drawing_area();
             obj.setup_classifier();
         }
 
@@ -183,6 +184,85 @@ impl TeXMatchWindow {
             .expect("Failed to send strokes");
     }
 
+    fn create_surface(&self, width: i32, height: i32) {
+        let surface = cairo::ImageSurface::create(cairo::Format::ARgb32, width, height)
+            .expect("Failed to create surface");
+        self.imp().surface.replace(Some(surface));
+    }
+
+    fn setup_drawing_area(&self) {
+        let imp = self.imp();
+        imp.drawing_area.connect_resize(
+            glib::clone!(@weak self as window => move |_area: &gtk::DrawingArea, width, height| {
+                //recreate surface on size change
+                //this shouldn't happen, since the window size is unchangable
+                window.create_surface(width, height);
+            }),
+        );
+
+        let drag = gtk::GestureDrag::builder().button(0).build();
+        drag.connect_drag_begin(
+            glib::clone!(@weak self as window => move |_drag: &gtk::GestureDrag, x: f64, y: f64 | {
+                tracing::trace!("Drag started at {},{}", x, y);
+                window.imp().current_stroke.borrow_mut().add_point(detexify::Point {x, y});
+                window.imp().drawing_area.queue_draw();
+            }),
+        );
+        drag.connect_drag_update(
+            glib::clone!(@weak self as window => move |_drag: &gtk::GestureDrag, x: f64, y: f64 | {
+                tracing::trace!("Drag update at {},{}", x, y);
+                let mut stroke = window.imp().current_stroke.borrow_mut();
+                //x,y refers to movements relative to start coord
+                let detexify::Point {x: prev_x, y: prev_y} = stroke.points().next().copied().unwrap();
+                stroke.add_point(detexify::Point {x: prev_x + x, y: prev_y + y});
+                window.imp().drawing_area.queue_draw();
+            }),
+        );
+
+        drag.connect_drag_end(
+            glib::clone!(@weak self as window => move |_drag: &gtk::GestureDrag, x: f64, y: f64 | {
+                tracing::trace!("Drag end at {},{}", x, y);
+                let stroke = window.imp().current_stroke.take();
+                window.imp().strokes.borrow_mut().push(stroke);
+                window.imp().drawing_area.queue_draw();
+                //TODO: trigger classifier
+                window.classify();
+
+            }),
+        );
+        imp.drawing_area.add_controller(drag);
+
+        imp.drawing_area.set_draw_func(
+            glib::clone!(@weak self as window => move |_area: &gtk::DrawingArea, ctx: &cairo::Context, width, height| {
+                if let Some(surface) = window.imp().surface.take() {
+                    ctx.set_source_surface(&surface, 0.0, 0.0).expect("Failed to set surface");
+
+                    let curr_stroke = window.imp().current_stroke.borrow().clone();
+                    for stroke in window.imp().strokes.borrow().iter().chain(std::iter::once(&curr_stroke)) {
+                        tracing::trace!("Drawing: {:?}", stroke);
+                        let mut looped = false;
+                        for (p, q) in stroke.points().cloned().tuple_windows() {
+                            ctx.set_line_width(3.0);
+                            ctx.set_source_rgb(0.8, 0.8, 0.8);
+                            ctx.set_line_cap(cairo::LineCap::Round);
+                            ctx.move_to(p.x, p.y);
+                            ctx.line_to(q.x, q.y);
+                            ctx.stroke().expect("Failed to set stroke");
+                            looped = true;
+                        }
+
+                        if !looped && stroke.points().count() == 1 {
+                            let p = stroke.points().next().unwrap();
+                            ctx.set_source_rgb(0.8, 0.8, 0.8);
+                            ctx.arc(p.x, p.y, 1.5, 0.0, 2.0 * std::f64::consts::PI);
+                            ctx.fill().expect("Failed to fill");
+                        }
+                    }
+                    window.imp().surface.replace(Some(surface));
+                }
+            }
+        ));
+    }
 
     #[template_callback]
     fn clear(&self, _button: &gtk::Button) {
