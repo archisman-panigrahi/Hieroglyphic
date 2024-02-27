@@ -1,7 +1,7 @@
 use std::time::Instant;
 
 use gtk::subclass::prelude::*;
-use gtk::{gio, glib};
+use gtk::{gdk, gio, glib};
 use gtk::{prelude::*, StringObject};
 use itertools::Itertools;
 
@@ -198,7 +198,9 @@ impl TeXMatchWindow {
             }),
         );
 
-        let drag = gtk::GestureDrag::builder().button(0).build();
+        let drag = gtk::GestureDrag::builder()
+            .button(gdk::BUTTON_PRIMARY)
+            .build();
         drag.connect_drag_begin(
             glib::clone!(@weak self as window => move |_drag: &gtk::GestureDrag, x: f64, y: f64 | {
                 tracing::trace!("Drag started at {},{}", x, y);
