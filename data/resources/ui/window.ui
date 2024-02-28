@@ -63,6 +63,16 @@
                                         <property name="can_focus">False</property>
                                         <property name="hexpand">True</property>
                                         <property name="vexpand">True</property>
+                                        <signal name="resize" handler="on_resize" swapped="yes"/>
+                                        <child>
+                                            <object class="GtkGestureDrag">
+                                                <signal name="drag-begin" handler="on_drag_begin" swapped="yes"/>
+                                                <signal name="drag-update" handler="on_drag_update" swapped="yes"/>
+                                                <signal name="drag-end" handler="on_drag_end" swapped="yes"/>
+                                            </object>
+                                        </child>
+                                    </object>
+                                </child>
                                     </object>
                                 </child>
                                 <child>

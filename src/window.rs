@@ -97,7 +97,6 @@ impl TeXMatchWindow {
                 .map(|sym| sym.id())
                 .map(gtk::StringObject::new),
         );
-        // let model: gtk::StringList = detexify::iter_symbols().map(|symbol| symbol.id()).collect();
         tracing::debug!("Loaded {} symbols", model.n_items());
 
         self.imp()
@@ -192,48 +191,7 @@ impl TeXMatchWindow {
     }
 
     fn setup_drawing_area(&self) {
-        let imp = self.imp();
-        imp.drawing_area.connect_resize(
-            glib::clone!(@weak self as window => move |_area: &gtk::DrawingArea, width, height| {
-                //recreate surface on size change
-                window.imp().surface.borrow_mut().get_or_insert_with(|| window.create_surface(width, height));
-            }),
-        );
-
-        let drag = gtk::GestureDrag::builder()
-            .button(gdk::BUTTON_PRIMARY)
-            .build();
-        drag.connect_drag_begin(
-            glib::clone!(@weak self as window => move |_drag: &gtk::GestureDrag, x: f64, y: f64 | {
-                tracing::trace!("Drag started at {},{}", x, y);
-                window.imp().current_stroke.borrow_mut().add_point(detexify::Point {x, y});
-                window.imp().drawing_area.queue_draw();
-            }),
-        );
-        drag.connect_drag_update(
-            glib::clone!(@weak self as window => move |_drag: &gtk::GestureDrag, x: f64, y: f64 | {
-                tracing::trace!("Drag update at {},{}", x, y);
-                let mut stroke = window.imp().current_stroke.borrow_mut();
-                //x,y refers to movements relative to start coord
-                let detexify::Point {x: prev_x, y: prev_y} = stroke.points().next().copied().unwrap();
-                stroke.add_point(detexify::Point {x: prev_x + x, y: prev_y + y});
-                window.imp().drawing_area.queue_draw();
-            }),
-        );
-
-        drag.connect_drag_end(
-            glib::clone!(@weak self as window => move |_drag: &gtk::GestureDrag, x: f64, y: f64 | {
-                tracing::trace!("Drag end at {},{}", x, y);
-                let stroke = window.imp().current_stroke.take();
-                window.imp().strokes.borrow_mut().push(stroke);
-                window.imp().drawing_area.queue_draw();
-                window.classify();
-
-            }),
-        );
-        imp.drawing_area.add_controller(drag);
-
-        imp.drawing_area.set_draw_func(
+        self.imp().drawing_area.set_draw_func(
             glib::clone!(@weak self as window => move |_area: &gtk::DrawingArea, ctx: &cairo::Context, width, height| {
                 let mut surface = window.imp().surface.borrow_mut();
                 let surface = surface.get_or_insert_with(|| window.create_surface(width, height));
@@ -277,5 +235,49 @@ impl TeXMatchWindow {
         self.imp().current_stroke.borrow_mut().clear();
 
         self.imp().drawing_area.queue_draw();
+    }
+
+    #[template_callback]
+    fn on_resize(&self, width: i32, height: i32) {
+        //recreate surface on size change
+        self.imp()
+            .surface
+            .borrow_mut()
+            .get_or_insert_with(|| self.create_surface(width, height));
+    }
+
+    #[template_callback]
+    fn on_drag_begin(&self, x: f64, y: f64) {
+        tracing::trace!("Drag started at {},{}", x, y);
+        self.imp()
+            .current_stroke
+            .borrow_mut()
+            .add_point(detexify::Point { x, y });
+        self.imp().drawing_area.queue_draw();
+    }
+
+    #[template_callback]
+    fn on_drag_update(&self, x: f64, y: f64) {
+        tracing::trace!("Drag update at {},{}", x, y);
+        let mut stroke = self.imp().current_stroke.borrow_mut();
+        //x,y refers to movements relative to start coord
+        let detexify::Point {
+            x: prev_x,
+            y: prev_y,
+        } = stroke.points().next().copied().unwrap();
+        stroke.add_point(detexify::Point {
+            x: prev_x + x,
+            y: prev_y + y,
+        });
+        self.imp().drawing_area.queue_draw();
+    }
+
+    #[template_callback]
+    fn on_drag_end(&self, x: f64, y: f64) {
+        tracing::trace!("Drag end at {},{}", x, y);
+        let stroke = self.imp().current_stroke.take();
+        self.imp().strokes.borrow_mut().push(stroke);
+        self.imp().drawing_area.queue_draw();
+        self.classify();
     }
 }
