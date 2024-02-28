@@ -33,8 +33,13 @@
                                 </property>
                                 <child>
                                     <object class="GtkButton">
-                                        <!-- TODO: make this an icon instead? -->
-                                        <property name="label" translatable="yes">Clear</property>
+                                        <property name="child">
+                                            <object class="AdwButtonContent">
+                                                <property name="icon-name">eraser-symbolic</property>
+                                                <property name="label" translatable="yes">_Clear</property>
+                                                <property name="use-underline">True</property>
+                                            </object>
+                                        </property>
                                         <signal name="clicked" handler="clear" swapped="true"/>
                                     </object>
                                 </child>
