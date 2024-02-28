@@ -16,57 +16,67 @@
             </item>
         </section>
     </menu>
-    <!-- TODO: use adw widgets -->
-    <template class="TeXMatchWindow" parent="GtkApplicationWindow">
-        <property name="title" translatable="yes">TeX Match</property>
+    <template class="TeXMatchWindow" parent="AdwApplicationWindow">
         <property name="resizable">False</property>
         <property name="default_width">640</property>
         <property name="default_height">400</property>
-        <child type="titlebar">
-            <object class="GtkHeaderBar">
-                <child>
-                    <object class="GtkButton">
-                          <!-- TODO: make this an icon instead? -->
-                        <property name="label" translatable="yes">Clear</property>
-                        <signal name="clicked" handler="clear" swapped="true"/>
-                    </object>
-                </child>
-                <child type="end">
-                    <object class="GtkMenuButton">
-                        <property name="icon-name">open-menu-symbolic</property>
-                        <property name="menu-model">primary_menu</property>
-                        <property name="primary">True</property>
-                        <property name="tooltip-text" translatable="yes">Main Menu</property>
-                    </object>
-                </child>
-            </object>
-        </child>
-        <!-- TODO: use adw toast notifications -->
-        <child>
-            <object class="GtkBox">
-                <property name="hexpand">True</property>
-                <property name="vexpand">True</property>
-                <child>
-                    <object class="GtkDrawingArea" id="drawing_area">
-                        <property name="width_request">120</property>
-                        <property name="can_focus">False</property>
-                        <property name="hexpand">True</property>
-                        <property name="vexpand">True</property>
-                    </object>
-                </child>
-                <child>
-                    <object class="GtkScrolledWindow">
-                        <property name="hscrollbar-policy">never</property>
-                        <property name="min-content-height">200</property>
-                        <property name="vexpand">true</property>
-                        <child>
-                            <object class="GtkListBox" id="symbol_list">
-                                <property name="visible">True</property>
+        <property name="content">
+            <object class="AdwToastOverlay" id="toast_overlay">
+                <property name="child">
+                    <object class="AdwToolbarView">
+                        <child type="top">
+                            <object class="AdwHeaderBar">
+                                <property name="title-widget">
+                                    <object class="AdwWindowTitle">
+                                        <property name="title" translatable="yes">TeX Match</property>
+                                    </object>
+                                </property>
+                                <child>
+                                    <object class="GtkButton">
+                                        <!-- TODO: make this an icon instead? -->
+                                        <property name="label" translatable="yes">Clear</property>
+                                        <signal name="clicked" handler="clear" swapped="true"/>
+                                    </object>
+                                </child>
+                                <child type="end">
+                                    <object class="GtkMenuButton">
+                                        <property name="icon-name">open-menu-symbolic</property>
+                                        <property name="menu-model">primary_menu</property>
+                                        <property name="primary">True</property>
+                                        <property name="tooltip-text" translatable="yes">Main Menu</property>
+                                    </object>
+                                </child>
                             </object>
                         </child>
+                        <property name="content">
+                            <object class="GtkBox">
+                                <property name="hexpand">True</property>
+                                <property name="vexpand">True</property>
+                                <child>
+                                    <object class="GtkDrawingArea" id="drawing_area">
+                                        <property name="width_request">120</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="vexpand">True</property>
+                                    </object>
+                                </child>
+                                <child>
+                                    <object class="GtkScrolledWindow">
+                                        <property name="hscrollbar-policy">never</property>
+                                        <property name="min-content-height">200</property>
+                                        <property name="vexpand">true</property>
+                                        <child>
+                                            <object class="GtkListBox" id="symbol_list">
+                                                <property name="visible">True</property>
+                                            </object>
+                                        </child>
+                                    </object>
+                                </child>
+                            </object>
+                        </property>
                     </object>
-                </child>
+                </property>
             </object>
-        </child>
+        </property>
     </template>
 </interface>

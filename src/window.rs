@@ -12,6 +12,8 @@ use crate::symbol_item::SymbolItem;
 mod imp {
     use std::cell::{OnceCell, RefCell};
 
+    use adw::subclass::application_window::AdwApplicationWindowImpl;
+
     use super::*;
 
     #[derive(Debug, Default, gtk::CompositeTemplate)]
@@ -32,7 +34,7 @@ mod imp {
     impl ObjectSubclass for TeXMatchWindow {
         const NAME: &'static str = "TeXMatchWindow";
         type Type = super::TeXMatchWindow;
-        type ParentType = gtk::ApplicationWindow;
+        type ParentType = adw::ApplicationWindow;
 
         fn class_init(klass: &mut Self::Class) {
             klass.bind_template();
@@ -69,11 +71,12 @@ mod imp {
     impl WindowImpl for TeXMatchWindow {}
 
     impl ApplicationWindowImpl for TeXMatchWindow {}
+    impl AdwApplicationWindowImpl for TeXMatchWindow {}
 }
 
 glib::wrapper! {
     pub struct TeXMatchWindow(ObjectSubclass<imp::TeXMatchWindow>)
-        @extends gtk::Widget, gtk::Window, gtk::ApplicationWindow,
+        @extends gtk::Widget, gtk::Window, gtk::ApplicationWindow, adw::ApplicationWindow,
         @implements gio::ActionMap, gio::ActionGroup, gtk::Root;
 }
 

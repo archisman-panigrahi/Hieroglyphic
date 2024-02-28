@@ -10,6 +10,7 @@ use crate::window::TeXMatchWindow;
 
 mod imp {
     use super::*;
+    use adw::subclass::application::AdwApplicationImpl;
     use glib::WeakRef;
     use std::cell::OnceCell;
 
@@ -22,7 +23,7 @@ mod imp {
     impl ObjectSubclass for TexApplication {
         const NAME: &'static str = "TexApplication";
         type Type = super::TexApplication;
-        type ParentType = gtk::Application;
+        type ParentType = adw::Application;
     }
 
     impl ObjectImpl for TexApplication {}
@@ -62,11 +63,12 @@ mod imp {
     }
 
     impl GtkApplicationImpl for TexApplication {}
+    impl AdwApplicationImpl for TexApplication {}
 }
 
 glib::wrapper! {
     pub struct TexApplication(ObjectSubclass<imp::TexApplication>)
-        @extends gio::Application, gtk::Application,
+        @extends gio::Application, gtk::Application, adw::Application,
         @implements gio::ActionMap, gio::ActionGroup;
 }
 
