@@ -53,8 +53,7 @@ mod imp {
 
             // Devel Profile
             if PROFILE == "Devel" {
-                // Causes GTK_CRITICAL: investigae
-                // obj.add_css_class("devel");
+                obj.add_css_class("devel");
             }
 
             obj.setup_symbol_list();
