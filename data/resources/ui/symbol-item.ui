@@ -6,9 +6,7 @@
             <object class="GtkImage">
                 <property name="icon-name" bind-source="SymbolItem" bind-property="icon" bind-flags="sync-create"/>
                 <property name="icon-size">GTK_ICON_SIZE_LARGE</property>
-                <property name="margin-start">8</property>
-                <property name="margin-end">16</property>
-                <!-- <property name="icon-name">penguin-symbolic</property> -->
+                <property name="margin-end">4</property>
             </object>
         </child>
         <child>
@@ -16,7 +14,6 @@
                 <property name="orientation">vertical</property>
                 <child>
                     <object class="GtkLabel">
-                        <!-- <property name="label">\usepackage{ amssymb }</property> -->
                         <property name="halign">GTK_ALIGN_START</property>
                         <property name="label" bind-source="SymbolItem" bind-property="package" bind-flags="sync-create"/>
                     </object>
@@ -24,7 +21,6 @@
                 <child>
                     <object class="GtkLabel">
                         <property name="halign">GTK_ALIGN_START</property>
-                        <!-- <property name="label">\varpropto</property> -->
                         <property name="label" bind-source="SymbolItem" bind-property="command" bind-flags="sync-create"/>
                         <style>
                             <class name="title-3"/>
@@ -34,7 +30,6 @@
                 <child>
                     <object class="GtkLabel">
                         <property name="halign">GTK_ALIGN_START</property>
-                        <!-- <property name="label">mathmode (score 0.1473)</property> -->
                         <property name="label" bind-source="SymbolItem" bind-property="mode" bind-flags="sync-create"/>
                         <style>
                             <class name="caption"/>
