@@ -2,7 +2,7 @@ use std::time::Instant;
 
 use gettextrs::gettext;
 use gtk::subclass::prelude::*;
-use gtk::{gdk, gio, glib};
+use gtk::{gio, glib};
 use gtk::{prelude::*, StringObject};
 use itertools::Itertools;
 

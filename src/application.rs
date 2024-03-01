@@ -1,4 +1,3 @@
-use gettextrs::gettext;
 use tracing::{debug, info};
 
 use gtk::prelude::*;
