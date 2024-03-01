@@ -1,107 +1,60 @@
-<p align="center">
-  <img src="TeX-Match.gif" width="660px">
-</p>
+# TeX Match
 
-<div align="center">
-  <img width="128px" src="TeX-Match-Linux/data/fyi.zoey.TeX-Match.svg" >
-</div>
-
-<h1 align="center">TeX Match</h1>
-<h3 align="center">Find LaTeX symbols by sketching. A desktop version of <a href="https://detexify.kirelabs.org/classify.html">detexify</a></h3>
-<p align="center"><i>Also checkout <a href="https://github.com/zoeyfyi/Boop-GTK">Boop-GTK</a>: A scriptable scratchpad for developers</i></p>
-
-
-<p align="center">
-  <a href="#what-is-tex-match">What is TeX-Match?</a> • <a href="#features">Features</a> • <a href="#downloads">Downloads</a> • <a href="#screenshots">Screenshots</a> • <a href="#building">Building</a>
-</p>
-
-<br>
-
-![Continuous integration](https://github.com/zoeyfyi/TeX-Match/workflows/Continuous%20integration/badge.svg)
-![Release](https://github.com/zoeyfyi/TeX-Match/workflows/Release/badge.svg?branch=release)
-[![Crates.io](https://img.shields.io/crates/v/tex-match)](https://crates.io/crates/tex-match)
-[![tex-match](https://snapcraft.io//tex-match/badge.svg)](https://snapcraft.io/tex-match)
-[![Flathub](https://img.shields.io/flathub/v/fyi.zoey.TeX-Match)](https://flathub.org/apps/details/fyi.zoey.TeX-Match)
-![AUR version](https://img.shields.io/aur/version/tex-match?label=AUR%20tex-match)
-![AUR version](https://img.shields.io/aur/version/tex-match-bin?label=AUR%20tex-match-bin)
-
-### What is TeX Match?
+![TeX Match](data/icons/fyi.zoey.TeX-Match.svg)
 
 If you work with LaTeX, you know its difficult to memorize the names of all the symbols. TeX Match allows you to search through over 1000 different LaTeX symbols by sketching. Once you found the desired symbol you can copy it to the clipboard by clicking on the entry. TeX Match is based of [detexify](https://detexify.kirelabs.org/classify.html) and is powered by a port of the [detexify classifier](https://github.com/zoeyfyi/detexify-rust).
 
-### Features
+
+
+![Main Page](data/resources/screenshots/light.png)
+
+<details>
+  <summary>More screenshots</summary>
+
+![ (Dark UI)](data/resources/screenshots/dark.png)
+
+![Customize the shown formats (Light UI)](data/resources/screenshots/light.png)
+
+</details>
+
+# Features
 
 - Over 1000 LaTeX symbols across multiple packages (same set as detexify) 
 - Completely offline
-- Crossplatform
 
-### Downloads
+## Installation
 
-| Platform | Format | Link | 
-| -------- | ------ | ---- | 
-| Linux | Binary | [tex-match.linux.amd64](https://github.com/zoeyfyi/TeX-Match/releases/latest/download/tex-match.linux.amd64) | 
-| | Flatpak | [tex-match.flatpak](https://github.com/zoeyfyi/TeX-Match/releases/latest/download/tex-match.flatpak) | 
-| | Snap | [tex-match.snap](https://github.com/zoeyfyi/TeX-Match/releases/latest/download/tex-match.snap) | 
-| | AUR | [`tex-match`](https://aur.archlinux.org/packages/tex-match/) </br> [`tex-match-bin`](https://aur.archlinux.org/packages/tex-match-bin/)  |
-| | Snap Store | [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/tex-match) | 
-| | Flathub | [<img width='190' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'>](https://flathub.org/apps/details/fyi.zoey.TeX-Match) | 
-| Windows | Microsoft Store | [<img width='190' src='https://developer.microsoft.com/store/badges/images/English_get-it-from-MS.png' alt='English badge'/>](https://www.microsoft.com/store/apps/9nmkbc3rsks6?cid=storebadge&ocid=badge) | 
-| MacOS | Binary | You should really use the [detexify Mac app](https://gum.co/detexify), but if you _really_ want to: [tex-match.macos](https://github.com/zoeyfyi/TeX-Match/releases/latest/download/tex-match.macos) |
+### Flatpak
+<a href='https://flathub.org/apps/details/fyi.zoey.TeX-Match'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-i-en.png'/></a>
 
-### Screenshots
+## Contributing
 
-| Linux (Adwaita) | Linux (Adwaita-Dark) |
-| :---: | :---: |
-| ![Adwaita theme screenshot](screenshots/light.png) | ![Adwaita-Dark theme screenshot](screenshots/dark.png) |
-| __Windows__ |  |
-| ![](screenshots/windows.jpg) | |
+Contributors are expected to follow the [GNOME Code of Conduct](https://wiki.gnome.org/Foundation/CodeOfConduct).
 
+Any contributions you make are greatly appreciated. For major changes, please open an issue first to discuss what you would like to change.
 
-### Building
+To contribute:
 
-#### Linux
+1. [Fork the Project](https://github.com/FineFindus/TeX-Match/fork)
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'feat: add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feat/AmazingFeature`)
+5. Open a Pull Request
 
-```shell
-sudo apt-get install -y libgtk-3-dev
-cargo build
-```
+This project uses [conventional commits](https://www.conventionalcommits.org/)
 
-#### Linux Snap
+### Translation
 
-```shell
-sudo apt-get install snap snapcraft
-snapcraft snap
-sudo snap install tex-match_1.1.0_amd64.snap
-```
+Translations are a great way to contribute. This project uses the [GNU gettext](https://www.gnu.org/software/gettext/manual/html_node/index.html#SEC_Contents) for translations. If you want to learn more, visit the [translator section](https://www.gnu.org/software/gettext/manual/html_node/Translators.html#Translators).
 
-#### Linux Flatpak
+After finishing the translations, add the translated language code into the [LINGUAS](po/LINGUAS) file. Then follow the above steps to create a pull request.
 
-```shell
-sudo add-apt-repository ppa:alexlarsson/flatpak 
-sudo apt-get update 
-sudo apt-get install flatpak
-sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-sudo flatpak install -y flathub org.freedesktop.Platform//20.08 org.freedesktop.Sdk//20.08 org.freedesktop.Sdk.Extension.rust-stable//20.08
-wget https://github.com/flatpak/flatpak-builder/releases/download/1.0.10/flatpak-builder-1.0.10.tar.xz && tar -xvf flatpak-builder-1.0.10.tar.xz && cd flatpak-builder-1.0.10 && ./configure --disable-documentation && make && sudo make install
-sudo apt-get install python3-toml
-bash flatpak/gen-sources.sh
-flatpak-builder --repo=repo build-dir flatpak/fyi.zoey.TeX-Match.json
-flatpak build-bundle ./repo tex-match.flatpak fyi.zoey.TeX-Match
-```
+## Building
 
-#### MacOS
+See this [general guide](https://wiki.gnome.org/Newcomers/BuildProject) for building the project using GNOME Builder.
 
-```shell
-brew install gtk+3
-cargo build
-```
+## Credits
 
-#### Windows
+A huge thanks to all the libraries used and all the FOSS apps for inspiration. Special thanks to
 
-```powershell
-cd submodules/detexify-rust
-cargo build --release -Z build-std=std,panic_abort --target i686-uwp-windows-msvc
-cargo build --release -Z build-std=std,panic_abort --target x86_64-uwp-windows-msvc
-cd TeX-Match-Windows
-MSBuild /restore .\TeX-Match\TeX-Match.sln
-```
+- [TeX Match](https://github.com/zoeyfyi/TeX-Match) from which this was forked
