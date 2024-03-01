@@ -28,26 +28,9 @@
                         <property name="max-sidebar-width">500</property>
                         <property name="sidebar">
                             <object class="AdwNavigationPage">
-                                <property name="title" translatable="yes">Sidebar</property>
+                                <property name="title" translatable="yes"> </property>
                                 <property name="child">
                                     <object class="AdwToolbarView">
-                                        <child type="top">
-                                            <object class="AdwHeaderBar">
-                                                <property name="title-widget">
-                                                    <object class="AdwWindowTitle">
-                                                        <property name="title" translatable="yes">TeX Match</property>
-                                                    </object>
-                                                </property>
-                                                <child type="end">
-                                                    <object class="GtkMenuButton">
-                                                        <property name="icon-name">open-menu-symbolic</property>
-                                                        <property name="menu-model">primary_menu</property>
-                                                        <property name="primary">True</property>
-                                                        <property name="tooltip-text" translatable="yes">Main Menu</property>
-                                                    </object>
-                                                </child>
-                                            </object>
-                                        </child>
                                         <property name="content">
                                             <object class="GtkOverlay" id="overlay">
                                                 <child>
@@ -98,7 +81,21 @@
                                 <property name="child">
                                     <object class="AdwToolbarView">
                                         <child type="top">
-                                            <object class="AdwHeaderBar"/>
+                                            <object class="AdwHeaderBar">
+                                                <property name="title-widget">
+                                                    <object class="AdwWindowTitle">
+                                                        <property name="title" translatable="yes">TeX Match</property>
+                                                    </object>
+                                                </property>
+                                                <child type="end">
+                                                    <object class="GtkMenuButton">
+                                                        <property name="icon-name">open-menu-symbolic</property>
+                                                        <property name="menu-model">primary_menu</property>
+                                                        <property name="primary">True</property>
+                                                        <property name="tooltip-text" translatable="yes">Main Menu</property>
+                                                    </object>
+                                                </child>
+                                            </object>
                                         </child>
                                         <property name="content">
                                             <object class="GtkScrolledWindow">
