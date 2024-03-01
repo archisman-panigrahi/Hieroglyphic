@@ -75,15 +75,14 @@ impl SymbolItem {
             .property("package", format!("\\usepackage{{ {} }}", symbol.package))
             .property(
                 "mode",
-                if symbol.math_mode {
-                    "mathmode"
-                } else {
-                    "textmode"
+                match (symbol.math_mode, symbol.text_mode) {
+                    (true, true) => "mathmode & textmode",
+                    (false, true) => "textmode",
+                    (true, false) => "mathmode",
+                    (false, false) => "",
                 },
             )
-            // .property("font_encoding", symbol.font_encoding)
-            // .property("text_mode", symbol.text_mode)
-            // .property("math_mode", symbol.math_mode)
+            .property("font-encoding", symbol.font_encoding)
             .build()
     }
 
