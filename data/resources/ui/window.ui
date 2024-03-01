@@ -23,10 +23,50 @@
         <property name="content">
             <object class="AdwToastOverlay" id="toast_overlay">
                 <property name="child">
-                    <object class="AdwNavigationSplitView">
-                        <property name="sidebar-width-fraction">0.75</property>
-                        <property name="max-sidebar-width">500</property>
+                    <object class="AdwOverlaySplitView">
+                        <property name="sidebar-position">GTK_PACK_END</property>
                         <property name="sidebar">
+                            <object class="AdwNavigationPage">
+                                <property name="title" translatable="yes"> </property>
+                                <property name="child">
+                                    <object class="AdwToolbarView">
+                                        <child type="top">
+                                            <object class="AdwHeaderBar">
+                                                <property name="title-widget">
+                                                    <object class="AdwWindowTitle">
+                                                        <property name="title" translatable="yes">TeX Match</property>
+                                                    </object>
+                                                </property>
+                                                <child type="end">
+                                                    <object class="GtkMenuButton">
+                                                        <property name="icon-name">open-menu-symbolic</property>
+                                                        <property name="menu-model">primary_menu</property>
+                                                        <property name="primary">True</property>
+                                                        <property name="tooltip-text" translatable="yes">Main Menu</property>
+                                                    </object>
+                                                </child>
+                                            </object>
+                                        </child>
+                                        <property name="content">
+                                            <object class="GtkScrolledWindow">
+                                                <property name="width-request">330</property>
+                                                <property name="hscrollbar-policy">never</property>
+                                                <property name="min-content-height">200</property>
+                                                <child>
+                                                    <object class="GtkListBox" id="symbol_list">
+                                                        <signal name="row_activated" handler="on_item_activated" swapped="true"/>
+                                                        <style>
+                                                            <class name="navigation-sidebar" />
+                                                        </style>
+                                                    </object>
+                                                </child>
+                                            </object>
+                                        </property>
+                                    </object>
+                                </property>
+                            </object>
+                        </property>
+                        <property name="content">
                             <object class="AdwNavigationPage">
                                 <property name="title" translatable="yes"> </property>
                                 <property name="child">
@@ -67,47 +107,6 @@
                                                             <class name="pill" />
                                                             <class name="raised" />
                                                             <class name="opaque" />
-                                                        </style>
-                                                    </object>
-                                                </child>
-                                            </object>
-                                        </property>
-                                    </object>
-                                </property>
-                            </object>
-                        </property>
-                        <property name="content">
-                            <object class="AdwNavigationPage">
-                                <property name="title" translatable="yes"> </property>
-                                <property name="child">
-                                    <object class="AdwToolbarView">
-                                        <child type="top">
-                                            <object class="AdwHeaderBar">
-                                                <property name="title-widget">
-                                                    <object class="AdwWindowTitle">
-                                                        <property name="title" translatable="yes">TeX Match</property>
-                                                    </object>
-                                                </property>
-                                                <child type="end">
-                                                    <object class="GtkMenuButton">
-                                                        <property name="icon-name">open-menu-symbolic</property>
-                                                        <property name="menu-model">primary_menu</property>
-                                                        <property name="primary">True</property>
-                                                        <property name="tooltip-text" translatable="yes">Main Menu</property>
-                                                    </object>
-                                                </child>
-                                            </object>
-                                        </child>
-                                        <property name="content">
-                                            <object class="GtkScrolledWindow">
-                                                <property name="width-request">330</property>
-                                                <property name="hscrollbar-policy">never</property>
-                                                <property name="min-content-height">200</property>
-                                                <child>
-                                                    <object class="GtkListBox" id="symbol_list">
-                                                        <signal name="row_activated" handler="on_item_activated" swapped="true"/>
-                                                        <style>
-                                                            <class name="navigation-sidebar" />
                                                         </style>
                                                     </object>
                                                 </child>
