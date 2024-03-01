@@ -55,6 +55,7 @@
                                                         <property name="vexpand">true</property>
                                                         <child>
                                                             <object class="GtkListBox" id="symbol_list">
+                                                                <signal name="row_activated" handler="on_item_activated" swapped="true"/>
                                                                 <style>
                                                                     <class name="navigation-sidebar" />
                                                                 </style>

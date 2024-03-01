@@ -1,5 +1,6 @@
 use std::time::Instant;
 
+use gettextrs::gettext;
 use gtk::subclass::prelude::*;
 use gtk::{gdk, gio, glib};
 use gtk::{prelude::*, StringObject};
@@ -19,6 +20,8 @@ mod imp {
     #[derive(Debug, Default, gtk::CompositeTemplate)]
     #[template(resource = "/fyi/zoey/TeX-Match/ui/window.ui")]
     pub struct TeXMatchWindow {
+        #[template_child]
+        pub toast_overlay: TemplateChild<adw::ToastOverlay>,
         #[template_child]
         pub drawing_area: TemplateChild<gtk::DrawingArea>,
         #[template_child]
@@ -83,6 +86,15 @@ glib::wrapper! {
 impl TeXMatchWindow {
     pub fn new(app: &TexApplication) -> Self {
         glib::Object::builder().property("application", app).build()
+    }
+
+    /// Shows a basic toast with the given text.
+    fn show_toast(&self, text: impl AsRef<str>, priority: adw::ToastPriority) {
+        let toast = adw::Toast::new(text.as_ref());
+        toast.set_priority(priority);
+        self.imp()
+            .toast_overlay
+            .add_toast(adw::Toast::new(text.as_ref()));
     }
 
     /// Returns the symbols list store object.
@@ -279,5 +291,21 @@ impl TeXMatchWindow {
         self.imp().strokes.borrow_mut().push(stroke);
         self.imp().drawing_area.queue_draw();
         self.classify();
+    }
+
+    #[template_callback]
+    fn on_item_activated(&self, row: Option<&gtk::ListBoxRow>) {
+        let binding = row.and_then(|row| row.child());
+        let Some(symbol) = binding.and_downcast_ref::<SymbolItem>() else {
+            return;
+        };
+        let command = symbol.command();
+        let clipboard = self.clipboard();
+        clipboard.set_text(&command);
+        tracing::debug!("Selected: {}", &command);
+        self.show_toast(
+            gettext("Copied “{}”").replace("{}", &command),
+            adw::ToastPriority::Normal,
+        );
     }
 }
