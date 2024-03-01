@@ -50,6 +50,7 @@
                                             <object class="GtkOverlay" id="overlay">
                                                 <child>
                                                     <object class="GtkScrolledWindow">
+                                                        <property name="width-request">330</property>
                                                         <property name="hscrollbar-policy">never</property>
                                                         <property name="min-content-height">200</property>
                                                         <property name="vexpand">true</property>
