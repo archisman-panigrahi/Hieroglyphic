@@ -23,68 +23,98 @@
         <property name="content">
             <object class="AdwToastOverlay" id="toast_overlay">
                 <property name="child">
-                    <object class="AdwToolbarView">
-                        <child type="top">
-                            <object class="AdwHeaderBar">
-                                <property name="title-widget">
-                                    <object class="AdwWindowTitle">
-                                        <property name="title" translatable="yes">TeX Match</property>
-                                    </object>
-                                </property>
-                                <child>
-                                    <object class="GtkButton">
-                                        <property name="child">
-                                            <object class="AdwButtonContent">
-                                                <property name="icon-name">eraser-symbolic</property>
-                                                <property name="label" translatable="yes">_Clear</property>
-                                                <property name="use-underline">True</property>
+                    <object class="AdwNavigationSplitView">
+                        <property name="sidebar">
+                            <object class="AdwNavigationPage">
+                                <property name="title" translatable="yes">Sidebar</property>
+                                <property name="child">
+                                    <object class="AdwToolbarView">
+                                        <child type="top">
+                                            <object class="AdwHeaderBar">
+                                                <property name="title-widget">
+                                                    <object class="AdwWindowTitle">
+                                                        <property name="title" translatable="yes">TeX Match</property>
+                                                    </object>
+                                                </property>
+                                                <child type="end">
+                                                    <object class="GtkMenuButton">
+                                                        <property name="icon-name">open-menu-symbolic</property>
+                                                        <property name="menu-model">primary_menu</property>
+                                                        <property name="primary">True</property>
+                                                        <property name="tooltip-text" translatable="yes">Main Menu</property>
+                                                    </object>
+                                                </child>
+                                            </object>
+                                        </child>
+                                        <property name="content">
+                                            <object class="GtkOverlay" id="overlay">
+                                                <child>
+                                                    <object class="GtkScrolledWindow">
+                                                        <property name="hscrollbar-policy">never</property>
+                                                        <property name="min-content-height">200</property>
+                                                        <property name="vexpand">true</property>
+                                                        <child>
+                                                            <object class="GtkListBox" id="symbol_list">
+                                                                <style>
+                                                                    <class name="navigation-sidebar" />
+                                                                </style>
+                                                            </object>
+                                                        </child>
+                                                    </object>
+                                                </child>
+                                                <child type="overlay">
+                                                    <object class="GtkButton">
+                                                        <property name="halign">center</property>
+                                                        <property name="valign">end</property>
+                                                        <property name="margin-top">12</property>
+                                                        <property name="margin-bottom">18</property>
+                                                        <property name="child">
+                                                            <object class="AdwButtonContent">
+                                                                <property name="icon-name">eraser-symbolic</property>
+                                                                <property name="label" translatable="yes">_Clear</property>
+                                                                <property name="use-underline">True</property>
+                                                            </object>
+                                                        </property>
+                                                        <signal name="clicked" handler="clear" swapped="true"/>
+                                                        <style>
+                                                            <class name="pill" />
+                                                            <class name="raised" />
+                                                            <class name="opaque" />
+                                                        </style>
+                                                    </object>
+                                                </child>
                                             </object>
                                         </property>
-                                        <signal name="clicked" handler="clear" swapped="true"/>
                                     </object>
-                                </child>
-                                <child type="end">
-                                    <object class="GtkMenuButton">
-                                        <property name="icon-name">open-menu-symbolic</property>
-                                        <property name="menu-model">primary_menu</property>
-                                        <property name="primary">True</property>
-                                        <property name="tooltip-text" translatable="yes">Main Menu</property>
-                                    </object>
-                                </child>
+                                </property>
                             </object>
-                        </child>
+                        </property>
                         <property name="content">
-                            <object class="GtkBox">
-                                <property name="hexpand">True</property>
-                                <property name="vexpand">True</property>
-                                <child>
-                                    <object class="GtkDrawingArea" id="drawing_area">
-                                        <property name="width_request">120</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="hexpand">True</property>
-                                        <property name="vexpand">True</property>
-                                        <signal name="resize" handler="on_resize" swapped="yes"/>
-                                        <child>
-                                            <object class="GtkGestureDrag">
-                                                <signal name="drag-begin" handler="on_drag_begin" swapped="yes"/>
-                                                <signal name="drag-update" handler="on_drag_update" swapped="yes"/>
-                                                <signal name="drag-end" handler="on_drag_end" swapped="yes"/>
-                                            </object>
+                            <object class="AdwNavigationPage">
+                                <property name="title" translatable="yes"> </property>
+                                <property name="child">
+                                    <object class="AdwToolbarView">
+                                        <child type="top">
+                                            <object class="AdwHeaderBar"/>
                                         </child>
-                                    </object>
-                                </child>
-                                <child>
-                                    <object class="GtkScrolledWindow">
-                                        <property name="hscrollbar-policy">never</property>
-                                        <property name="min-content-height">200</property>
-                                        <property name="vexpand">true</property>
-                                        <child>
-                                            <object class="GtkListBox" id="symbol_list">
-                                                <property name="visible">True</property>
+                                        <property name="content">
+                                            <object class="GtkDrawingArea" id="drawing_area">
+                                                <property name="width_request">120</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="hexpand">True</property>
+                                                <property name="vexpand">True</property>
+                                                <signal name="resize" handler="on_resize" swapped="yes"/>
+                                                <child>
+                                                    <object class="GtkGestureDrag">
+                                                        <signal name="drag-begin" handler="on_drag_begin" swapped="yes"/>
+                                                        <signal name="drag-update" handler="on_drag_update" swapped="yes"/>
+                                                        <signal name="drag-end" handler="on_drag_end" swapped="yes"/>
+                                                    </object>
+                                                </child>
                                             </object>
-                                        </child>
+                                        </property>
                                     </object>
-                                </child>
+                                </property>
                             </object>
                         </property>
                     </object>
