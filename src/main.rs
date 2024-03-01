@@ -3,6 +3,7 @@ mod application;
 mod config;
 mod symbol_item;
 mod window;
+mod about_window;
 
 use gettextrs::{gettext, LocaleCategory};
 use gtk::{gio, glib};

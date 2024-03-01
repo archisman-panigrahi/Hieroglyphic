@@ -4,6 +4,7 @@ use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::{gdk, gio, glib};
 
+use crate::about_window::TeXMatchAbout;
 use crate::config::{self};
 use crate::window::TeXMatchWindow;
 
@@ -114,17 +115,7 @@ impl TexApplication {
     }
 
     fn show_about_dialog(&self) {
-        let dialog = gtk::AboutDialog::builder()
-            .logo_icon_name(config::APP_ID)
-            .license_type(gtk::License::Gpl30)
-            .version(config::VERSION)
-            .transient_for(&self.main_window())
-            .translator_credits(gettext("translator-credits"))
-            .modal(true)
-            .authors(vec!["Zoey Sheffield"])
-            .build();
-
-        dialog.present();
+        TeXMatchAbout::show(self, &self.main_window());
     }
 
     pub fn run(&self) -> glib::ExitCode {
