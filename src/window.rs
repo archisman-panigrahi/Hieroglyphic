@@ -1,9 +1,9 @@
 use std::time::Instant;
 
 use gettextrs::gettext;
+use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::{gio, glib};
-use gtk::{prelude::*, StringObject};
 use itertools::Itertools;
 
 use crate::application::TexApplication;
@@ -120,7 +120,7 @@ impl TeXMatchWindow {
         self.imp().symbol_list.bind_model(
             Some(&selection_model),
             glib::clone!(@weak self as window => @default-panic, move |obj| {
-                let symbol_object = obj.downcast_ref::<StringObject>().expect("The object is not of type `StringObject`.");
+                let symbol_object = obj.downcast_ref::<gtk::StringObject>().expect("The object is not of type `StringObject`.");
                 let symbol_item = SymbolItem::new(detexify::Symbol::from_id(symbol_object.string().as_str()).expect("Failed to get symbol"));
                 symbol_item.upcast()
             }),
