@@ -1,0 +1,36 @@
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:gnome="http://api.gnome.org/doap-extensions#"
+    xmlns="http://usefulinc.com/ns/doap#">
+
+    <name xml:lang="en">TeX Match</name>
+    <shortdesc xml:lang="en">Find LaTeX symbols</shortdesc>
+    <homepage rdf:resource="https://github.com/FineFindus/TeX-Match" />
+    <download-page rdf:resource="https://github.com/FineFindus/TeX-Match/releases" />
+    <bug-database rdf:resource="https://github.com/FineFindus/TeX-Match/issues" />
+
+    <programming-language>Rust</programming-language>
+    <platform>GTK 4</platform>
+    <platform>Libadwaita</platform>
+
+    <maintainer>
+        <foaf:Person>
+            <foaf:name>FineFindus</foaf:name>
+            <gnome:userid>jbenzler</gnome:userid>
+            <foaf:mbox rdf:resource="mailto:finefindus@proton.me" />
+            <foaf:account>
+                <foaf:OnlineAccount>
+                    <foaf:accountServiceHomepage rdf:resource="https://github.com/" />
+                    <foaf:accountName>FineFindus</foaf:accountName>
+                </foaf:OnlineAccount>
+            </foaf:account>
+            <foaf:account>
+                <foaf:OnlineAccount>
+                    <foaf:accountServiceHomepage rdf:resource="https://gitlab.gnome.org" />
+                    <foaf:accountName>FineFindus</foaf:accountName>
+                </foaf:OnlineAccount>
+            </foaf:account>
+        </foaf:Person>
+    </maintainer>
+</Project>
