@@ -178,7 +178,7 @@ impl TeXMatchWindow {
                 // let objs = classifications.iter().map(|score|gtk::StringObject::new(&score.id)).collect_vec();
                 // symbols.extend_from_slice(&objs);
 
-                // swicthing out all 1k symbols takes too long, so only display the first 25
+                // switching out all 1k symbols takes too long, so only display the first 25
                 // TODO: find faster ways and display all
                 for symbol in classifications.iter().take(25) {
                     symbols.append(&gtk::StringObject::new(&symbol.id))

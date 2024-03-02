@@ -51,7 +51,7 @@
     <release version="1.0.0" date="2020-09-19">
       <description>
         <p>New icon</p>
-        <p>About dialog with basic application infomation</p>
+        <p>About dialog with basic application information</p>
         <p>Display's a notification when clicking on a symbol to copy</p>
       </description>
     </release>
