@@ -105,8 +105,7 @@
                                                         <signal name="clicked" handler="clear" swapped="true"/>
                                                         <style>
                                                             <class name="pill" />
-                                                            <class name="raised" />
-                                                            <class name="opaque" />
+                                                            <class name="flat" />
                                                         </style>
                                                     </object>
                                                 </child>
