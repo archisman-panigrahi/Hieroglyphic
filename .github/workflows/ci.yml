@@ -1,112 +1,55 @@
-name: Continuous integration
-
 on:
   push:
-    branches: [ trunk ]
+    branches: [main]
   pull_request:
-    branches: [ trunk ]
 
-env:
-  CARGO_TERM_COLOR: always
+name: CI
 
 jobs:
-  windows:
-    name: Windows
-    runs-on: windows-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: 'recursive'
-    - name: Install rust
-      uses: hecrj/setup-rust-action@v1
-      with:
-        components: clippy, rustfmt, rust-src
-        rust-version: nightly
-    - name: Compile detextify (x86_64-uwp-windows-msvc)
-      run: cargo build --package detexify-c --release -Z build-std=std,panic_abort --target x86_64-uwp-windows-msvc
-      working-directory: ./submodules/detexify-rust
-    - name: Compile detextify (i686-uwp-windows-msvc)
-      run: cargo build --package detexify-c --release -Z build-std=std,panic_abort --target i686-uwp-windows-msvc
-      working-directory: ./submodules/detexify-rust
-    - name: setup-msbuild
-      uses: microsoft/setup-msbuild@v1
-    - name: Build solution
-      run: MSBuild TeX-Match/TeX-Match.sln /restore /t:Build /p:Configuration=Release /p:Platform=x64 /p:AppxPackageSigningEnabled=false
-      working-directory: ./TeX-Match-Windows
-
-  linux:
-    name: Linux
+  rustfmt:
+    name: Rustfmt
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: 'recursive'
-    - name: Install rust
-      uses: hecrj/setup-rust-action@v1
-      with:
-        components: clippy, rustfmt
-        rust-version: 1.46.0
-    - name: Cache cargo
-      uses: actions/cache@v2.1.5
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-    - name: Dependencies
-      run: sudo apt-get update -y && sudo apt-get install -y libgtk-3-dev libgtksourceview-3.0-dev
-    - name: Check
-      run: cargo check
-      working-directory: ./TeX-Match-Linux
-    - name: Test
-      run: cargo test -- --nocapture
-      working-directory: ./TeX-Match-Linux
-    - name: Fmt
-      run: cargo fmt --all -- --check
-      working-directory: ./TeX-Match-Linux
-    - name: Clippy
-      run: cargo clippy -- -D warnings
-      working-directory: ./TeX-Match-Linux
-
-  snap:
-    name: snap
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          submodules: "recursive"
-      - uses: snapcore/action-build@v1
+          toolchain: stable
+          components: rustfmt
+      - name: Create blank versions of configured file
+        run: echo -e "" >> src/config.rs
+      - name: Run cargo fmt
+        run: cargo fmt --all -- --check
 
   flatpak:
+    name: Flatpak
     runs-on: ubuntu-latest
     container:
-      image: docker.io/bilelmoussaoui/flatpak-github-actions
+      image: bilelmoussaoui/flatpak-github-actions:gnome-nightly
       options: --privileged
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - name: Add Flathub Beta remote
+        run: |
+          flatpak --user remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
+          # flatpak install --user -y flathub-beta org.freedesktop.Sdk.Extension.rust-stable//23.08beta org.freedesktop.Sdk.Extension.llvm16//23.08beta
+      - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v6
         with:
-          submodules: "recursive"
-      - name: Dependency (Python TOML)
-        run: sudo dnf install -y python3-toml
-      - name: Generate sources
-        run: bash flatpak/gen-sources.sh
-        working-directory: ./TeX-Match-Linux
-      - uses: bilelmoussaoui/flatpak-github-actions@v2
-        with:
-          manifest-path: "TeX-Match-Linux/flatpak/fyi.zoey.TeX-Match.json"
+          bundle: eyedropper.flatpak
+          # repository-name: flathub-beta
+          manifest-path: build-aux/com.github.finefindus.eyedropper.Devel.json
+          run-tests: true
+          cache-key: flatpak-builder-${{ github.sha }}
 
-  metadata:
+  spell_check:
+    name: Spell Checker
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Dependencies
-        run: sudo apt-get install -y appstream-util desktop-file-utils
-      - name: Validate data/fyi.zoey.TeX-Match.metainfo.xml
-        run: appstream-util validate-relax data/fyi.zoey.TeX-Match.metainfo.xml
-        working-directory: ./TeX-Match-Linux
-      - name: Validate data/fyi.zoey.TeX-Match.desktop
-        run: desktop-file-validate data/fyi.zoey.TeX-Match.desktop
-        working-directory: ./TeX-Match-Linux
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install Python Dependencies
+        run: pip install codespell
+      - name: Run spellchecker
+        run: codespell  -S po,_build,.git,.flatpak,_builddir,build,target -L crate,rouge,vermillion
