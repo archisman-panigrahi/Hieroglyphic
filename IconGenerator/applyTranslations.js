@@ -8,7 +8,7 @@ const active = true;
 const description = 'applys translations to x and y';
 
 /**
- * Applys translations to elements with an x and y attribute
+ * Applies translations to elements with an x and y attribute
  *
  *
  * @param {Object} document document element
