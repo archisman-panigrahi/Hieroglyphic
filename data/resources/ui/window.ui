@@ -104,8 +104,7 @@
                                                         </property>
                                                         <signal name="clicked" handler="clear" swapped="true"/>
                                                         <style>
-                                                            <class name="pill" />
-                                                            <class name="flat" />
+                                                            <class name="clear-button" />
                                                         </style>
                                                     </object>
                                                 </child>
