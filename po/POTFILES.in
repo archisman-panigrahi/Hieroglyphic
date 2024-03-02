@@ -1,5 +1,10 @@
 data/fyi.zoey.TeX-Match.desktop.in.in
 data/fyi.zoey.TeX-Match.gschema.xml.in
 data/fyi.zoey.TeX-Match.metainfo.xml.in.in
+data/resources/ui/symbol-item.ui
 data/resources/ui/window.ui
+src/about_window.rs
 src/application.rs
+src/main.rs
+src/symbol_item.rs
+src/window.rs
