@@ -125,8 +125,6 @@ impl TeXMatchWindow {
                 symbol_item.upcast()
             }),
         );
-
-        self.imp().symbol_list.set_visible(true);
     }
 
     fn setup_classifier(&self) {
