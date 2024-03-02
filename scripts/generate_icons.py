@@ -79,8 +79,9 @@ for (symbol, package, fontenc, textmode, mathmode) in parsed_symbols:
     id = package + "-" + fontenc + "-" + symbol.replace("\\", "_")
     id = base64.b32encode(id.encode("utf-8"))
     id = str(id, "utf-8")
+    id = id.rstrip("=")
     
-    os.system("mv temp2.svg symbols/{}".format(id))
+    os.system("mv temp2.svg symbols/{}.svg".format(id))
     
 # cleanup files
 os.system("rm temp.*")
