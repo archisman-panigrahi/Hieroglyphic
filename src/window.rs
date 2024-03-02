@@ -237,11 +237,6 @@ impl TeXMatchWindow {
 
     #[template_callback]
     fn clear(&self, _button: &gtk::Button) {
-        // recreate drawing area
-        let width = self.imp().drawing_area.content_width();
-        let height = self.imp().drawing_area.content_height();
-        self.create_surface(width, height);
-
         //clear previous strokes
         self.imp().strokes.borrow_mut().clear();
         self.imp().current_stroke.borrow_mut().clear();
