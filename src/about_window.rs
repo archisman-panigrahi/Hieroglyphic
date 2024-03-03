@@ -9,13 +9,13 @@ use glib::object::IsA;
 use gtk::glib;
 use gtk::{Application, License, Window};
 
-pub const COPYRIGHT: &str = "Copyright © 2024 FineFindus";
-pub const WEBSITE: &str = "https://github.com/FineFindus/TeX-Match/";
-pub const ISSUE_TRACKER: &str = "https://github.com/FineFindus/eyedropper/issues/new/choose";
-pub const DEVELOPER_NAME: &str = "FineFindus";
-pub const DEVELOPERS: &[&str] = &["Zoey Sheffield", "FineFindus https://github.com/FineFindus"];
-pub const DESIGNERS: &[&str] = &["Tobias Bernard"];
-pub const ARTISTS: &[&str] = &["Tobias Bernard"];
+const COPYRIGHT: &str = "Copyright © 2024 FineFindus";
+const WEBSITE: &str = "https://github.com/FineFindus/TeX-Match/";
+const ISSUE_TRACKER: &str = "https://github.com/FineFindus/TeX-Match/issues/";
+const DEVELOPER_NAME: &str = "FineFindus";
+const DEVELOPERS: &[&str] = &["Zoey Sheffield", "FineFindus https://github.com/FineFindus"];
+const DESIGNERS: &[&str] = &["Tobias Bernard"];
+const ARTISTS: &[&str] = &["Tobias Bernard"];
 
 #[derive(Debug)]
 pub struct TeXMatchAbout;
@@ -41,7 +41,6 @@ impl TeXMatchAbout {
             .version(VERSION)
             .website(WEBSITE)
             .issue_url(ISSUE_TRACKER)
-            // .comments(Self::details())
             .copyright(COPYRIGHT)
             .debug_info(Self::debug_info())
             .debug_info_filename("tex_match_debug")
