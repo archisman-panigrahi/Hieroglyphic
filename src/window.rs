@@ -295,7 +295,7 @@ impl TeXMatchWindow {
         let command = symbol.command();
         let clipboard = self.clipboard();
         clipboard.set_text(&command);
-        tracing::debug!("Selected: {}", &command);
+        tracing::debug!("Selected: {} ({})", &command, symbol.id());
         self.show_toast(
             gettext("Copied “{}”").replace("{}", &command),
             adw::ToastPriority::Normal,

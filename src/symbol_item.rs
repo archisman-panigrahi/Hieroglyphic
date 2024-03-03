@@ -14,6 +14,8 @@ mod imp {
     #[properties(wrapper_type = super::SymbolItem)]
     pub struct SymbolItem {
         #[property(get, set)]
+        pub(super) id: RefCell<String>,
+        #[property(get, set)]
         pub(super) icon: RefCell<String>,
         #[property(get, set)]
         pub(super) package: RefCell<String>,
@@ -70,6 +72,7 @@ glib::wrapper! {
 impl SymbolItem {
     pub fn new(symbol: detexify::Symbol) -> Self {
         Object::builder()
+            .property("id", symbol.id())
             .property("icon", &format!("{}-symbolic", symbol.id()))
             .property("command", symbol.command)
             .property("package", format!("\\usepackage{{ {} }}", symbol.package))
