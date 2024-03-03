@@ -10,8 +10,8 @@ use gtk::glib;
 use gtk::{Application, License, Window};
 
 const COPYRIGHT: &str = "Copyright © 2024 FineFindus";
-const WEBSITE: &str = "https://github.com/FineFindus/TeX-Match/";
-const ISSUE_TRACKER: &str = "https://github.com/FineFindus/TeX-Match/issues/";
+const WEBSITE: &str = "https://github.com/FineFindus/Hieroglyphic/";
+const ISSUE_TRACKER: &str = "https://github.com/FineFindus/Hieroglyphic/issues/";
 const DEVELOPER_NAME: &str = "FineFindus";
 const DEVELOPERS: &[&str] = &["Zoey Sheffield", "FineFindus https://github.com/FineFindus"];
 const DESIGNERS: &[&str] = &["Tobias Bernard"];
@@ -30,7 +30,7 @@ impl TeXMatchAbout {
             .transient_for(window)
             .modal(true)
             .application_icon(APP_ID)
-            .application_name(gettext("TeX Match"))
+            .application_name(gettext("Hieroglyphic"))
             .developer_name(DEVELOPER_NAME)
             .developers(DEVELOPERS)
             .designers(DESIGNERS)

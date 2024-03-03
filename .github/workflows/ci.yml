@@ -36,7 +36,7 @@ jobs:
         with:
           bundle: eyedropper.flatpak
           # repository-name: flathub-beta
-          manifest-path: build-aux/fyi.zoey.TeX-Match.Devel.json
+          manifest-path: build-aux/io.github.finefindus.Hieroglyphic.Devel.json
           run-tests: true
           cache-key: flatpak-builder-${{ github.sha }}
 

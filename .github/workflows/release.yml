@@ -180,7 +180,7 @@ jobs:
     - uses: bilelmoussaoui/flatpak-github-actions@v2
       with:
         bundle: "tex-match.flatpak"
-        manifest-path: "flatpak/fyi.zoey.TeX-Match.json"
+        manifest-path: "flatpak/io.github.finefindus.Hieroglyphic.json"
     - uses: actions/upload-artifact@v2.2.3
       with:
         name: tex-match.flatpak

@@ -541,6 +541,23 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "95505c38b4572b2d910cecb0281560f54b440a19336cbbcb27bf6ce6adc6f5a8"
 
 [[package]]
+name = "hieroglyphic"
+version = "1.0.0"
+dependencies = [
+ "async-channel",
+ "cairo-rs",
+ "detexify",
+ "gdk-pixbuf",
+ "gettext-rs",
+ "gtk4",
+ "itertools 0.12.1",
+ "libadwaita",
+ "pango",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "indexmap"
 version = "2.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1096,23 +1113,6 @@ name = "temp-dir"
 version = "0.1.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dd16aa9ffe15fe021c6ee3766772132c6e98dfa395a167e16864f61a9cfb71d6"
-
-[[package]]
-name = "tex-match"
-version = "1.2.0"
-dependencies = [
- "async-channel",
- "cairo-rs",
- "detexify",
- "gdk-pixbuf",
- "gettext-rs",
- "gtk4",
- "itertools 0.12.1",
- "libadwaita",
- "pango",
- "tracing",
- "tracing-subscriber",
-]
 
 [[package]]
 name = "thiserror"

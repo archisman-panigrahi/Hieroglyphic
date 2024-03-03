@@ -4,11 +4,11 @@
     xmlns:gnome="http://api.gnome.org/doap-extensions#"
     xmlns="http://usefulinc.com/ns/doap#">
 
-    <name xml:lang="en">TeX Match</name>
+    <name xml:lang="en">Hieroglyphic</name>
     <shortdesc xml:lang="en">Find LaTeX symbols</shortdesc>
-    <homepage rdf:resource="https://github.com/FineFindus/TeX-Match" />
-    <download-page rdf:resource="https://github.com/FineFindus/TeX-Match/releases" />
-    <bug-database rdf:resource="https://github.com/FineFindus/TeX-Match/issues" />
+    <homepage rdf:resource="https://github.com/FineFindus/Hieroglyphic" />
+    <download-page rdf:resource="https://github.com/FineFindus/Hieroglyphic/releases" />
+    <bug-database rdf:resource="https://github.com/FineFindus/Hieroglyphic/issues" />
 
     <programming-language>Rust</programming-language>
     <platform>GTK 4</platform>

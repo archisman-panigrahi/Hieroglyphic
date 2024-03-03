@@ -1,8 +1,8 @@
-# TeX Match
+# Hieroglyphic
 
-![TeX Match](data/icons/fyi.zoey.TeX-Match.svg)
+![Hieroglyphic](data/icons/io.github.finefindus.Hieroglyphic.svg)
 
-If you work with LaTeX, you know its difficult to memorize the names of all the symbols. TeX Match allows you to search through over 1000 different LaTeX symbols by sketching. Once you found the desired symbol you can copy it to the clipboard by clicking on the entry. TeX Match is based of [detexify](https://detexify.kirelabs.org/classify.html) and is powered by a port of the [detexify classifier](https://github.com/zoeyfyi/detexify-rust).
+If you work with LaTeX, you know its difficult to memorize the names of all the symbols. Hieroglyphic allows you to search through over 1000 different LaTeX symbols by sketching. Once you found the desired symbol you can copy it to the clipboard by clicking on the entry. Hieroglyphic is based of [detexify](https://detexify.kirelabs.org/classify.html) and is powered by a port of the [detexify classifier](https://github.com/zoeyfyi/detexify-rust).
 
 
 
@@ -25,7 +25,7 @@ If you work with LaTeX, you know its difficult to memorize the names of all the 
 ## Installation
 
 ### Flatpak
-<a href='https://flathub.org/apps/details/fyi.zoey.TeX-Match'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-i-en.png'/></a>
+<a href='https://flathub.org/apps/details/io.github.finefindus.Hieroglyphic'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-i-en.png'/></a>
 
 ## Contributing
 
@@ -35,7 +35,7 @@ Any contributions you make are greatly appreciated. For major changes, please op
 
 To contribute:
 
-1. [Fork the Project](https://github.com/FineFindus/TeX-Match/fork)
+1. [Fork the Project](https://github.com/FineFindus/Hieroglyphic/fork)
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your Changes (`git commit -m 'feat: add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feat/AmazingFeature`)

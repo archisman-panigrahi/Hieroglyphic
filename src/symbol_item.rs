@@ -10,7 +10,7 @@ mod imp {
     use super::*;
 
     #[derive(Debug, Default, gtk::CompositeTemplate, glib::Properties)]
-    #[template(resource = "/fyi/zoey/TeX-Match/ui/symbol-item.ui")]
+    #[template(resource = "/io/github/finefindus/Hieroglyphic/ui/symbol-item.ui")]
     #[properties(wrapper_type = super::SymbolItem)]
     pub struct SymbolItem {
         #[property(get, set)]

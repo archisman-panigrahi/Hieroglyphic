@@ -1,5 +1,5 @@
 {
-    "id": "fyi.zoey.TeX-Match",
+    "id": "io.github.finefindus.Hieroglyphic",
     "runtime": "org.gnome.Platform",
     "runtime-version": "master",
     "sdk": "org.gnome.Sdk",
@@ -7,7 +7,7 @@
         "org.freedesktop.Sdk.Extension.rust-stable",
         "org.freedesktop.Sdk.Extension.llvm16"
     ],
-    "command": "tex-match",
+    "command": "hieroglyphic",
     "finish-args": [
         "--socket=fallback-x11",
         "--socket=wayland",
@@ -35,7 +35,7 @@
     },
     "modules": [
         {
-            "name": "tex-match",
+            "name": "hieroglyphic",
             "buildsystem": "meson",
             "run-tests": false,
             "config-opts": [

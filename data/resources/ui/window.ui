@@ -18,7 +18,7 @@
                                             <object class="AdwHeaderBar">
                                                 <property name="title-widget">
                                                     <object class="AdwWindowTitle">
-                                                        <property name="title" translatable="yes">TeX Match</property>
+                                                        <property name="title" translatable="yes">Hieroglyphic</property>
                                                     </object>
                                                 </property>
                                                 <child type="end">

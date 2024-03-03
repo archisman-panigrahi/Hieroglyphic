@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=TeX Match
+Name=Hieroglyphic
 Comment=Search through over 1000 different LaTeX symbols by sketching
 Type=Application
 Exec=tex-match

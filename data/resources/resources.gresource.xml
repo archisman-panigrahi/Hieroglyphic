@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-    <gresource prefix="/fyi/zoey/TeX-Match/">
+    <gresource prefix="/io/github/finefindus/Hieroglyphic/">
     <!-- see https://gtk-rs.org/gtk4-rs/git/docs/gtk4/struct.Application.html#automatic-resources -->
     <!-- <file compressed="true" preprocess="xml-stripblanks" alias="gtk/help-overlay.ui">ui/shortcuts.ui</file> -->
     <file compressed="true" preprocess="xml-stripblanks">ui/window.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/symbol-item.ui</file>
     <file compressed="true">style.css</file>
 </gresource>
-<gresource prefix="/fyi/zoey/TeX-Match/icons/scalable/actions">
+<gresource prefix="/io/github/finefindus/Hieroglyphic/icons/scalable/actions">
     <file preprocess="xml-stripblanks" alias="eraser-symbolic.svg">icons/eraser5-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="about-symbolic.svg">icons/about-symbolic.svg</file>
     <!-- Generated preview of the latex symbols -->

@@ -18,7 +18,7 @@ mod imp {
     use super::*;
 
     #[derive(Debug, Default, gtk::CompositeTemplate)]
-    #[template(resource = "/fyi/zoey/TeX-Match/ui/window.ui")]
+    #[template(resource = "/io/github/finefindus/Hieroglyphic/ui/window.ui")]
     pub struct TeXMatchWindow {
         #[template_child]
         pub toast_overlay: TemplateChild<adw::ToastOverlay>,

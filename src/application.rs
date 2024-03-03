@@ -104,7 +104,7 @@ impl TexApplication {
 
     fn setup_css(&self) {
         let provider = gtk::CssProvider::new();
-        provider.load_from_resource("/fyi/zoey/TeX-Match/style.css");
+        provider.load_from_resource("/io/github/finefindus/Hieroglyphic/style.css");
         if let Some(display) = gdk::Display::default() {
             gtk::style_context_add_provider_for_display(
                 &display,
@@ -131,7 +131,7 @@ impl Default for TexApplication {
     fn default() -> Self {
         glib::Object::builder()
             .property("application-id", config::APP_ID)
-            .property("resource-base-path", "/fyi/zoey/TeX-Match/")
+            .property("resource-base-path", "/io/github/finefindus/Hieroglyphic/")
             .build()
     }
 }

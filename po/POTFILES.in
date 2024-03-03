@@ -1,6 +1,6 @@
-data/fyi.zoey.TeX-Match.desktop.in.in
-data/fyi.zoey.TeX-Match.gschema.xml.in
-data/fyi.zoey.TeX-Match.metainfo.xml.in.in
+data/io.github.finefindus.Hieroglyphic.desktop.in.in
+data/io.github.finefindus.Hieroglyphic.gschema.xml.in
+data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in
 data/resources/ui/symbol-item.ui
 data/resources/ui/window.ui
 src/about_window.rs
