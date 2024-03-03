@@ -63,7 +63,7 @@
   </custom>
 
   <branding>
-      <color type="primary" scheme_preference="light">##7EE0B4</color>
+      <color type="primary" scheme_preference="light">#7EE0B4</color>
       <color type="primary" scheme_preference="dark">#26A169</color>
   </branding>
 
