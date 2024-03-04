@@ -34,7 +34,7 @@ jobs:
           # flatpak install --user -y flathub-beta org.freedesktop.Sdk.Extension.rust-stable//23.08beta org.freedesktop.Sdk.Extension.llvm16//23.08beta
       - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v6
         with:
-          bundle: eyedropper.flatpak
+          bundle: Hieroglyphic.flatpak
           # repository-name: flathub-beta
           manifest-path: build-aux/io.github.finefindus.Hieroglyphic.Devel.json
           run-tests: true
