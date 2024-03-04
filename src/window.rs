@@ -231,7 +231,7 @@ impl TeXMatchWindow {
                 for stroke in window.imp().strokes.borrow().iter().chain(std::iter::once(&curr_stroke)) {
                     tracing::trace!("Drawing: {:?}", stroke);
                     let mut looped = false;
-                    for (p, q) in stroke.points().copied().tuple_windows() {
+                    for (p, q) in stroke.points().tuple_windows() {
                         ctx.move_to(p.x, p.y);
                         ctx.line_to(q.x, q.y);
                         looped = true;
