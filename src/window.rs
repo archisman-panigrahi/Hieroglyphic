@@ -11,7 +11,10 @@ use crate::config::PROFILE;
 use crate::symbol_item::SymbolItem;
 
 mod imp {
-    use std::cell::{OnceCell, RefCell};
+    use std::{
+        cell::{OnceCell, RefCell},
+        sync::mpsc::Sender,
+    };
 
     use adw::subclass::application_window::AdwApplicationWindowImpl;
 
@@ -30,7 +33,7 @@ mod imp {
         pub symbols: OnceCell<gio::ListStore>,
         pub strokes: RefCell<Vec<detexify::Stroke>>,
         pub current_stroke: RefCell<detexify::Stroke>,
-        pub sender: OnceCell<std::sync::mpsc::Sender<Vec<detexify::Stroke>>>,
+        pub sender: OnceCell<Sender<Vec<detexify::Stroke>>>,
     }
 
     #[glib::object_subclass]
@@ -228,12 +231,12 @@ impl TeXMatchWindow {
                 for stroke in window.imp().strokes.borrow().iter().chain(std::iter::once(&curr_stroke)) {
                     tracing::trace!("Drawing: {:?}", stroke);
                     let mut looped = false;
-                    for (p, q) in stroke.points().cloned().tuple_windows() {
+                    for (p, q) in stroke.points().copied().tuple_windows() {
                         ctx.move_to(p.x, p.y);
                         ctx.line_to(q.x, q.y);
-                        ctx.stroke().expect("Failed to draw stroke");
                         looped = true;
                     }
+                    ctx.stroke().expect("Failed to draw stroke");
 
                     if !looped && stroke.points().count() == 1 {
                         let p = stroke.points().next().unwrap();
