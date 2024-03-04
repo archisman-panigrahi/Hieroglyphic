@@ -99,7 +99,10 @@ impl TeXMatchWindow {
 
     /// Returns the symbols list store object.
     fn symbols(&self) -> &gio::ListStore {
-        self.imp().symbols.get().expect("Failed to get symbols")
+        self.imp()
+            .symbols
+            .get()
+            .expect("`symbols` should be initialized in `setup_symbol_list`")
     }
 
     fn setup_symbol_list(&self) {
@@ -120,8 +123,8 @@ impl TeXMatchWindow {
         self.imp().symbol_list.bind_model(
             Some(&selection_model),
             glib::clone!(@weak self as window => @default-panic, move |obj| {
-                let symbol_object = obj.downcast_ref::<gtk::StringObject>().expect("The object is not of type `StringObject`.");
-                let symbol_item = SymbolItem::new(detexify::Symbol::from_id(symbol_object.string().as_str()).expect("Failed to get symbol"));
+                let symbol_object = obj.downcast_ref::<gtk::StringObject>().expect("Object should be of type `StringObject`");
+                let symbol_item = SymbolItem::new(detexify::Symbol::from_id(symbol_object.string().as_str()).expect("`symbol_object` should be a valid symbol id"));
                 symbol_item.upcast()
             }),
         );
@@ -169,7 +172,6 @@ impl TeXMatchWindow {
         glib::spawn_future_local(glib::clone!(@weak self as window => async move {
             tracing::debug!("Listening for classifications");
             while let Ok(classifications) = res_rx.recv().await {
-
                 let symbols = window.symbols();
                 symbols.remove_all();
 

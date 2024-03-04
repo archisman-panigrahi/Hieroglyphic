@@ -37,6 +37,7 @@
                                                 <property name="min-content-height">200</property>
                                                 <child>
                                                     <object class="GtkListBox" id="symbol_list">
+                                                        <property name="selection-mode">none</property>
                                                         <signal name="row_activated" handler="on_item_activated" swapped="true"/>
                                                         <style>
                                                             <class name="navigation-sidebar" />
