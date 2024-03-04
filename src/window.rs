@@ -1,8 +1,8 @@
 use std::time::Instant;
 
 use gettextrs::gettext;
-use gtk::prelude::*;
 use gtk::subclass::prelude::*;
+use gtk::{gdk, prelude::*};
 use gtk::{gio, glib};
 use itertools::Itertools;
 
@@ -200,6 +200,17 @@ impl TeXMatchWindow {
             .expect("Failed to create surface")
     }
 
+    /// Returns a theme-specific color for the drawing line.
+    fn line_color(&self) -> gdk::RGBA {
+        if adw::StyleManager::default().is_dark() {
+            // #CCCCCC
+            gdk::RGBA::new(0.8, 0.8, 0.8, 1.0)
+        } else {
+            // adw @dark_2 color
+            gdk::RGBA::new(0.37, 0.36, 0.39, 1.0)
+        }
+    }
+
     fn setup_drawing_area(&self) {
         self.imp().drawing_area.set_draw_func(
             glib::clone!(@weak self as window => move |_area: &gtk::DrawingArea, ctx: &cairo::Context, width, height| {
@@ -207,6 +218,8 @@ impl TeXMatchWindow {
                 let surface = surface.get_or_insert_with(|| window.create_surface(width, height));
 
                 ctx.set_source_surface(surface, 0.0, 0.0).expect("Failed to set surface");
+                let color = &window.line_color();
+                ctx.set_source_color(color);
 
                 let curr_stroke = window.imp().current_stroke.borrow().clone();
                 for stroke in window.imp().strokes.borrow().iter().chain(std::iter::once(&curr_stroke)) {
@@ -214,7 +227,6 @@ impl TeXMatchWindow {
                     let mut looped = false;
                     for (p, q) in stroke.points().cloned().tuple_windows() {
                         ctx.set_line_width(3.0);
-                        ctx.set_source_rgb(0.8, 0.8, 0.8);
                         ctx.set_line_cap(cairo::LineCap::Round);
                         ctx.move_to(p.x, p.y);
                         ctx.line_to(q.x, q.y);
@@ -224,7 +236,6 @@ impl TeXMatchWindow {
 
                     if !looped && stroke.points().count() == 1 {
                         let p = stroke.points().next().unwrap();
-                        ctx.set_source_rgb(0.8, 0.8, 0.8);
                         ctx.arc(p.x, p.y, 1.5, 0.0, 2.0 * std::f64::consts::PI);
                         ctx.fill().expect("Failed to fill");
                     }
