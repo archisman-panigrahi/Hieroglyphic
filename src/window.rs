@@ -218,19 +218,18 @@ impl TeXMatchWindow {
                 let surface = surface.get_or_insert_with(|| window.create_surface(width, height));
 
                 ctx.set_source_surface(surface, 0.0, 0.0).expect("Failed to set surface");
-                let color = &window.line_color();
-                ctx.set_source_color(color);
+                ctx.set_source_color(&window.line_color());
+                ctx.set_line_width(3.0);
+                ctx.set_line_cap(cairo::LineCap::Round);
 
                 let curr_stroke = window.imp().current_stroke.borrow().clone();
                 for stroke in window.imp().strokes.borrow().iter().chain(std::iter::once(&curr_stroke)) {
                     tracing::trace!("Drawing: {:?}", stroke);
                     let mut looped = false;
                     for (p, q) in stroke.points().cloned().tuple_windows() {
-                        ctx.set_line_width(3.0);
-                        ctx.set_line_cap(cairo::LineCap::Round);
                         ctx.move_to(p.x, p.y);
                         ctx.line_to(q.x, q.y);
-                        ctx.stroke().expect("Failed to set stroke");
+                        ctx.stroke().expect("Failed to draw stroke");
                         looped = true;
                     }
 
