@@ -11,14 +11,14 @@
                         <property name="sidebar-position">GTK_PACK_END</property>
                         <property name="sidebar">
                             <object class="AdwNavigationPage">
-                                <property name="title" translatable="yes"> </property>
+                                <property name="title" translatable="false">Symbols</property>
                                 <property name="child">
                                     <object class="AdwToolbarView">
                                         <child type="top">
                                             <object class="AdwHeaderBar">
                                                 <property name="title-widget">
                                                     <object class="AdwWindowTitle">
-                                                        <property name="title" translatable="yes">Hieroglyphic</property>
+                                                        <property name="title" translatable="false">Hieroglyphic</property>
                                                     </object>
                                                 </property>
                                                 <child type="end">
@@ -52,7 +52,7 @@
                         </property>
                         <property name="content">
                             <object class="AdwNavigationPage">
-                                <property name="title" translatable="yes"> </property>
+                                <property name="title" translatable="false">Drawing area</property>
                                 <property name="child">
                                     <object class="AdwToolbarView">
                                         <property name="content">
