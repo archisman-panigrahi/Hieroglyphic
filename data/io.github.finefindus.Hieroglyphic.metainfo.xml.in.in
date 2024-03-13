@@ -13,7 +13,6 @@
       <name translatable="no">FineFindus</name>
   </developer>
   <update_contact>finefindus@proton.me</update_contact>
-  <project_group>GNOME</project_group>
 
   <description>
     <p>If you work with LaTeX, you know its difficult to memorize the names of all the symbols. Hieroglyphic allows you to search through over 1000 different LaTeX symbols by sketching.</p>
