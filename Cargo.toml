@@ -1,6 +1,6 @@
 [package]
 name = "hieroglyphic"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["FineFindus <FineFindus@proton.me>"]
 edition = "2021"
 description = """Search through over 1000 different LaTeX symbols by sketching"""
