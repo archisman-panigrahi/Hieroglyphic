@@ -51,7 +51,7 @@ msgstr "Finestra principale"
 
 #: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:29
 msgid "Main Window (Adwaita-Dark)"
-msgstr "Finestra principale" (Adwaita-Scuro)
+msgstr "Finestra principale (Adwaita-Scuro)"
 
 #: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:45
 msgid "Initial release"
