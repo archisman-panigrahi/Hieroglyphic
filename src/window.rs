@@ -6,7 +6,7 @@ use gtk::{gdk, prelude::*};
 use gtk::{gio, glib};
 use itertools::Itertools;
 
-use crate::application::TexApplication;
+use crate::application::HieroglyphicApplication;
 use crate::config::PROFILE;
 use crate::symbol_item::SymbolItem;
 
@@ -22,7 +22,7 @@ mod imp {
 
     #[derive(Debug, Default, gtk::CompositeTemplate)]
     #[template(resource = "/io/github/finefindus/Hieroglyphic/ui/window.ui")]
-    pub struct TeXMatchWindow {
+    pub struct HieroglyphicWindow {
         #[template_child]
         pub toast_overlay: TemplateChild<adw::ToastOverlay>,
         #[template_child]
@@ -37,9 +37,9 @@ mod imp {
     }
 
     #[glib::object_subclass]
-    impl ObjectSubclass for TeXMatchWindow {
-        const NAME: &'static str = "TeXMatchWindow";
-        type Type = super::TeXMatchWindow;
+    impl ObjectSubclass for HieroglyphicWindow {
+        const NAME: &'static str = "HieroglyphicWindow";
+        type Type = super::HieroglyphicWindow;
         type ParentType = adw::ApplicationWindow;
 
         fn class_init(klass: &mut Self::Class) {
@@ -52,7 +52,7 @@ mod imp {
         }
     }
 
-    impl ObjectImpl for TeXMatchWindow {
+    impl ObjectImpl for HieroglyphicWindow {
         fn constructed(&self) {
             self.parent_constructed();
             let obj = self.obj();
@@ -72,22 +72,22 @@ mod imp {
         }
     }
 
-    impl WidgetImpl for TeXMatchWindow {}
-    impl WindowImpl for TeXMatchWindow {}
+    impl WidgetImpl for HieroglyphicWindow {}
+    impl WindowImpl for HieroglyphicWindow {}
 
-    impl ApplicationWindowImpl for TeXMatchWindow {}
-    impl AdwApplicationWindowImpl for TeXMatchWindow {}
+    impl ApplicationWindowImpl for HieroglyphicWindow {}
+    impl AdwApplicationWindowImpl for HieroglyphicWindow {}
 }
 
 glib::wrapper! {
-    pub struct TeXMatchWindow(ObjectSubclass<imp::TeXMatchWindow>)
+    pub struct HieroglyphicWindow(ObjectSubclass<imp::HieroglyphicWindow>)
         @extends gtk::Widget, gtk::Window, gtk::ApplicationWindow, adw::ApplicationWindow,
         @implements gio::ActionMap, gio::ActionGroup, gtk::Root;
 }
 
 #[gtk::template_callbacks]
-impl TeXMatchWindow {
-    pub fn new(app: &TexApplication) -> Self {
+impl HieroglyphicWindow {
+    pub fn new(app: &HieroglyphicApplication) -> Self {
         glib::Object::builder().property("application", app).build()
     }
 

@@ -18,9 +18,9 @@ const DESIGNERS: &[&str] = &["Tobias Bernard"];
 const ARTISTS: &[&str] = &["Tobias Bernard"];
 
 #[derive(Debug)]
-pub struct TeXMatchAbout;
+pub struct HieroglyphicAbout;
 
-impl TeXMatchAbout {
+impl HieroglyphicAbout {
     pub fn show<A: IsA<Application> + AdwApplicationExt, W: IsA<Window> + GtkWindowExt>(
         app: &A,
         window: &W,

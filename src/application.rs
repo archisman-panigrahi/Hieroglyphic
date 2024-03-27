@@ -4,9 +4,9 @@ use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::{gdk, gio, glib};
 
-use crate::about_window::TeXMatchAbout;
+use crate::about_window::HieroglyphicAbout;
 use crate::config::{self};
-use crate::window::TeXMatchWindow;
+use crate::window::HieroglyphicWindow;
 
 mod imp {
     use super::*;
@@ -15,22 +15,22 @@ mod imp {
     use std::cell::OnceCell;
 
     #[derive(Debug, Default)]
-    pub struct TexApplication {
-        pub window: OnceCell<WeakRef<TeXMatchWindow>>,
+    pub struct HieroglyphicApplication {
+        pub window: OnceCell<WeakRef<HieroglyphicWindow>>,
     }
 
     #[glib::object_subclass]
-    impl ObjectSubclass for TexApplication {
-        const NAME: &'static str = "TexApplication";
-        type Type = super::TexApplication;
+    impl ObjectSubclass for HieroglyphicApplication {
+        const NAME: &'static str = "HieroglyphicApplication";
+        type Type = super::HieroglyphicApplication;
         type ParentType = adw::Application;
     }
 
-    impl ObjectImpl for TexApplication {}
+    impl ObjectImpl for HieroglyphicApplication {}
 
-    impl ApplicationImpl for TexApplication {
+    impl ApplicationImpl for HieroglyphicApplication {
         fn activate(&self) {
-            debug!("TeXMatch<TexApplication>::activate");
+            debug!("Hieroglyphic<HieroglyphicApplication>::activate");
             self.parent_activate();
             let app = self.obj();
 
@@ -40,7 +40,7 @@ mod imp {
                 return;
             }
 
-            let window = TeXMatchWindow::new(&app);
+            let window = HieroglyphicWindow::new(&app);
             self.window
                 .set(window.downgrade())
                 .expect("Window already set.");
@@ -49,7 +49,7 @@ mod imp {
         }
 
         fn startup(&self) {
-            debug!("TeXMatch<ExampleApplication>::startup");
+            debug!("Hieroglyphic<HieroglyphicApplication>::startup");
             self.parent_startup();
             let app = self.obj();
 
@@ -62,18 +62,18 @@ mod imp {
         }
     }
 
-    impl GtkApplicationImpl for TexApplication {}
-    impl AdwApplicationImpl for TexApplication {}
+    impl GtkApplicationImpl for HieroglyphicApplication {}
+    impl AdwApplicationImpl for HieroglyphicApplication {}
 }
 
 glib::wrapper! {
-    pub struct TexApplication(ObjectSubclass<imp::TexApplication>)
+    pub struct HieroglyphicApplication(ObjectSubclass<imp::HieroglyphicApplication>)
         @extends gio::Application, gtk::Application, adw::Application,
         @implements gio::ActionMap, gio::ActionGroup;
 }
 
-impl TexApplication {
-    fn main_window(&self) -> TeXMatchWindow {
+impl HieroglyphicApplication {
+    fn main_window(&self) -> HieroglyphicWindow {
         self.imp().window.get().unwrap().upgrade().unwrap()
     }
 
@@ -115,11 +115,11 @@ impl TexApplication {
     }
 
     fn show_about_dialog(&self) {
-        TeXMatchAbout::show(self, &self.main_window());
+        HieroglyphicAbout::show(self, &self.main_window());
     }
 
     pub fn run(&self) -> glib::ExitCode {
-        info!("Tex Match ({})", config::APP_ID);
+        info!("Hieroglyphic ({})", config::APP_ID);
         info!("Version: {} ({})", config::VERSION, config::PROFILE);
         info!("Datadir: {}", config::PKGDATADIR);
 
@@ -127,7 +127,7 @@ impl TexApplication {
     }
 }
 
-impl Default for TexApplication {
+impl Default for HieroglyphicApplication {
     fn default() -> Self {
         glib::Object::builder()
             .property("application-id", config::APP_ID)
