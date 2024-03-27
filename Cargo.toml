@@ -9,8 +9,14 @@ repository = "https://github.com/FineFindus/tex-match/"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[profile.release.package."*"]
+opt-level = 3
+
 [profile.release]
+opt-level = 3
 lto = true
+codegen-units = 1
+strip = true
 
 [dependencies]
 # GTK
