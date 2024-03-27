@@ -1,11 +1,10 @@
 use glib::Object;
-use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::{glib, prelude::ObjectExt};
 
 mod imp {
 
-    use std::cell::{Cell, RefCell};
+    use std::cell::RefCell;
 
     use super::*;
 
@@ -20,15 +19,9 @@ mod imp {
         #[property(get, set)]
         pub(super) package: RefCell<String>,
         #[property(get, set)]
-        pub(super) font_encoding: RefCell<String>,
-        #[property(get, set)]
         pub(super) command: RefCell<String>,
         #[property(get, set)]
         pub(super) mode: RefCell<String>,
-        #[property(get, set)]
-        pub(super) text_mode: Cell<bool>,
-        #[property(get, set)]
-        pub(super) math_mode: Cell<bool>,
     }
 
     #[glib::object_subclass]
@@ -85,14 +78,6 @@ impl SymbolItem {
                     (false, false) => "",
                 },
             )
-            .property("font-encoding", symbol.font_encoding)
             .build()
-    }
-
-    #[template_callback]
-    fn on_click(&self) {
-        let clipboard = self.clipboard();
-        clipboard.set_text("TODO: copy item name");
-        //TODO: show adw toast
     }
 }
