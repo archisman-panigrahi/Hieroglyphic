@@ -1,7 +1,7 @@
 mod application;
 #[rustfmt::skip]
 mod config;
-mod about_window;
+mod about;
 mod symbol_item;
 mod window;
 

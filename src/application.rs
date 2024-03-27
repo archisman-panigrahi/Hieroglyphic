@@ -1,10 +1,11 @@
+use adw::prelude::AdwDialogExt;
 use tracing::{debug, info};
 
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::{gdk, gio, glib};
 
-use crate::about_window::HieroglyphicAbout;
+use crate::about;
 use crate::config::{self};
 use crate::window::HieroglyphicWindow;
 
@@ -115,7 +116,7 @@ impl HieroglyphicApplication {
     }
 
     fn show_about_dialog(&self) {
-        HieroglyphicAbout::show(self, &self.main_window());
+        about::window().present(&self.main_window());
     }
 
     pub fn run(&self) -> glib::ExitCode {
