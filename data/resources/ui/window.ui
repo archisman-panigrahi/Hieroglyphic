@@ -16,6 +16,7 @@
                                     <object class="AdwToolbarView">
                                         <child type="top">
                                             <object class="AdwHeaderBar">
+                                                <property name="decoration-layout">:close</property>
                                                 <property name="title-widget">
                                                     <object class="AdwWindowTitle">
                                                         <property name="title" translatable="false">Hieroglyphic</property>
