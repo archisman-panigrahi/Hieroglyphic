@@ -29,6 +29,7 @@ mod imp {
         pub drawing_area: TemplateChild<gtk::DrawingArea>,
         #[template_child]
         pub symbol_list: TemplateChild<gtk::ListBox>,
+        pub toast: RefCell<Option<adw::Toast>>,
         pub surface: RefCell<Option<cairo::ImageSurface>>,
         pub symbols: OnceCell<gio::ListStore>,
         pub strokes: RefCell<Vec<detexify::Stroke>>,
@@ -96,12 +97,14 @@ impl HieroglyphicWindow {
     }
 
     /// Shows a basic toast with the given text.
-    fn show_toast(&self, text: impl AsRef<str>, priority: adw::ToastPriority) {
+    fn show_toast(&self, text: impl AsRef<str>) {
         let toast = adw::Toast::new(text.as_ref());
-        toast.set_priority(priority);
-        self.imp()
-            .toast_overlay
-            .add_toast(adw::Toast::new(text.as_ref()));
+        toast.set_use_markup(false);
+        // dismiss and replace the previous toast if it exists
+        if let Some(prev_toast) = self.imp().toast.replace(Some(toast.clone())) {
+            prev_toast.dismiss();
+        }
+        self.imp().toast_overlay.add_toast(toast.clone());
     }
 
     /// Returns the symbols list store object.
@@ -315,9 +318,6 @@ impl HieroglyphicWindow {
         let clipboard = self.clipboard();
         clipboard.set_text(&command);
         tracing::debug!("Selected: {} ({})", &command, symbol.id());
-        self.show_toast(
-            gettext("Copied “{}”").replace("{}", &command),
-            adw::ToastPriority::Normal,
-        );
+        self.show_toast(gettext("Copied “{}”").replace("{}", &command));
     }
 }
