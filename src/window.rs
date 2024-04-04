@@ -45,6 +45,10 @@ mod imp {
         fn class_init(klass: &mut Self::Class) {
             klass.bind_template();
             klass.bind_template_instance_callbacks();
+
+            klass.install_action("win.clear", None, move |win, _, _| {
+                win.clear();
+            });
         }
 
         fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
@@ -249,7 +253,7 @@ impl HieroglyphicWindow {
     }
 
     #[template_callback]
-    fn clear(&self, _button: &gtk::Button) {
+    fn clear(&self) {
         //clear previous strokes
         self.imp().strokes.borrow_mut().clear();
         self.imp().current_stroke.borrow_mut().clear();
