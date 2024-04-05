@@ -176,14 +176,14 @@ impl HieroglyphicWindow {
                 };
 
                 res_tx
-                    .send_blocking(classifications.unwrap_or_default())
+                    .send_blocking(classifications)
                     .expect("Failed to send classifications");
             }
         });
 
         glib::spawn_future_local(glib::clone!(@weak self as window => async move {
             tracing::debug!("Listening for classifications");
-            while let Ok(classifications) = res_rx.recv().await {
+            while let Ok(Some(classifications)) = res_rx.recv().await {
                 window.imp().stack.set_visible_child_name("symbols");
                 let symbols = window.symbols();
                 symbols.remove_all();
