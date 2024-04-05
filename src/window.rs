@@ -29,6 +29,8 @@ mod imp {
         pub drawing_area: TemplateChild<gtk::DrawingArea>,
         #[template_child]
         pub symbol_list: TemplateChild<gtk::ListBox>,
+        #[template_child]
+        pub stack: TemplateChild<gtk::Stack>,
         pub toast: RefCell<Option<adw::Toast>>,
         pub surface: RefCell<Option<cairo::ImageSurface>>,
         pub symbols: OnceCell<gio::ListStore>,
@@ -182,6 +184,7 @@ impl HieroglyphicWindow {
         glib::spawn_future_local(glib::clone!(@weak self as window => async move {
             tracing::debug!("Listening for classifications");
             while let Ok(classifications) = res_rx.recv().await {
+                window.imp().stack.set_visible_child_name("symbols");
                 let symbols = window.symbols();
                 symbols.remove_all();
 
