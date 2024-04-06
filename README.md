@@ -6,7 +6,7 @@ If you work with LaTeX, you know it's difficult to memorize the names of all the
 
 
 
-![Main Page](data/resources/screenshots/window_symbol.png)
+![Main Page](data/resources/screenshots/window.png)
 
 <details>
   <summary>More screenshots</summary>

@@ -19,12 +19,20 @@
   </description>
 
   <screenshots>
-    <screenshot type="default">
-        <image>https://raw.githubusercontent.com/FineFindus/Hieroglyphic/main/data/resources/screenshots/window_symbol.png</image>
+    <screenshot type="default" environment="gnome">
+        <image>https://raw.githubusercontent.com/FineFindus/Hieroglyphic/main/data/resources/screenshots/window.png</image>
         <caption>Main Window</caption>
     </screenshot>
-    <screenshot type="default">
+    <screenshot environment="gnome">
         <image>https://raw.githubusercontent.com/FineFindus/Hieroglyphic/main/data/resources/screenshots/placeholder.png</image>
+        <caption>Main Window (Adwaita-Dark)</caption>
+    </screenshot>
+    <screenshot type="default" environment="gnome:dark">
+        <image>https://raw.githubusercontent.com/FineFindus/Hieroglyphic/main/data/resources/screenshots/window_dark.png</image>
+        <caption>Main Window</caption>
+    </screenshot>
+    <screenshot environment="gnome:dark">
+        <image>https://raw.githubusercontent.com/FineFindus/Hieroglyphic/main/data/resources/screenshots/placeholder_dark.png</image>
         <caption>Main Window (Adwaita-Dark)</caption>
     </screenshot>
   </screenshots>
