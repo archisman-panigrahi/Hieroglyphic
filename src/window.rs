@@ -7,7 +7,6 @@ use gtk::{gio, glib};
 use itertools::Itertools;
 
 use crate::application::HieroglyphicApplication;
-use crate::config::PROFILE;
 use crate::symbol_item::SymbolItem;
 
 mod imp {
@@ -17,6 +16,8 @@ mod imp {
     };
 
     use adw::subclass::application_window::AdwApplicationWindowImpl;
+
+    use crate::config;
 
     use super::*;
 
@@ -65,7 +66,7 @@ mod imp {
             let obj = self.obj();
 
             // Devel Profile
-            if PROFILE == "Devel" {
+            if config::PROFILE == "Devel" {
                 obj.add_css_class("devel");
             }
 
