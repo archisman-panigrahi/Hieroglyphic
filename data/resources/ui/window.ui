@@ -41,7 +41,7 @@
                                                             <object class="AdwStatusPage">
                                                                 <property name="icon-name">edit-symbolic</property>
                                                                 <property name="title" translatable="yes">No Symbols</property>
-                                                                <property name="description" translatable="yes">Start by drawing a symbol of the left side</property>
+                                                                <property name="description" translatable="yes">Start by drawing a symbol</property>
                                                                 <style>
                                                                     <class name="compact" />
                                                                 </style>
