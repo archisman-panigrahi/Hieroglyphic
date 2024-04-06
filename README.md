@@ -27,7 +27,7 @@ If you work with LaTeX, you know it's difficult to memorize the names of all the
 
 ## Contributing
 
-Contributors are expected to follow the [GNOME Code of Conduct](https://wiki.gnome.org/Foundation/CodeOfConduct).
+Contributors are expected to follow the [GNOME Code of Conduct](https://conduct.gnome.org/).
 
 Any contributions you make are greatly appreciated. For major changes, please open an issue first to discuss what you would like to change.
 
