@@ -1,6 +1,0 @@
-[submodule "submodules/flatpak-builder-tools"]
-	path = submodules/flatpak-builder-tools
-	url = https://github.com/flatpak/flatpak-builder-tools.git
-[submodule "submodules/detexify-rust"]
-	path = submodules/detexify-rust
-	url = https://github.com/zoeyfyi/detexify-rust
