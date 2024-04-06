@@ -6,14 +6,12 @@ If you work with LaTeX, you know its difficult to memorize the names of all the 
 
 
 
-![Main Page](data/resources/screenshots/light.png)
+![Main Page](data/resources/screenshots/window_symbol.png)
 
 <details>
   <summary>More screenshots</summary>
 
-![ (Dark UI)](data/resources/screenshots/dark.png)
-
-![Customize the shown formats (Light UI)](data/resources/screenshots/light.png)
+![Placeholder](data/resources/screenshots/placeholder.png)
 
 </details>
 

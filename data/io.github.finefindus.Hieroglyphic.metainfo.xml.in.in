@@ -20,11 +20,11 @@
 
   <screenshots>
     <screenshot type="default">
-        <image>https://raw.githubusercontent.com/FineFindus/Hieroglyphic/main/data/resources/screenshots/light.png</image>
+        <image>https://raw.githubusercontent.com/FineFindus/Hieroglyphic/main/data/resources/screenshots/window_symbol.png</image>
         <caption>Main Window</caption>
     </screenshot>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/FineFindus/Hieroglyphic/main/data/resources/screenshots/dark.png</image>
+      <image>https://raw.githubusercontent.com/FineFindus/Hieroglyphic/main/data/resources/screenshots/placeholder.png</image>
       <caption>Main Window (Adwaita-Dark)</caption>
     </screenshot>
   </screenshots>
