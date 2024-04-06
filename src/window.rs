@@ -70,6 +70,8 @@ mod imp {
                 obj.add_css_class("devel");
             }
 
+            tracing::debug!("Loaded {} symbols", detexify::iter_symbols().count());
+
             obj.setup_symbol_list();
             obj.setup_drawing_area();
             obj.setup_classifier();
@@ -119,13 +121,7 @@ impl HieroglyphicWindow {
     }
 
     fn setup_symbol_list(&self) {
-        let mut model = gio::ListStore::new::<gtk::StringObject>();
-        model.extend(
-            detexify::iter_symbols()
-                .map(|sym| sym.id())
-                .map(gtk::StringObject::new),
-        );
-        tracing::debug!("Loaded {} symbols", model.n_items());
+        let model = gio::ListStore::new::<gtk::StringObject>();
 
         self.imp()
             .symbols
@@ -188,9 +184,6 @@ impl HieroglyphicWindow {
                 window.imp().stack.set_visible_child_name("symbols");
                 let symbols = window.symbols();
                 symbols.remove_all();
-
-                // let objs = classifications.iter().map(|score|gtk::StringObject::new(&score.id)).collect_vec();
-                // symbols.extend_from_slice(&objs);
 
                 // switching out all 1k symbols takes too long, so only display the first 25
                 // TODO: find faster ways and display all
@@ -319,8 +312,7 @@ impl HieroglyphicWindow {
             return;
         };
         let command = symbol.command();
-        let clipboard = self.clipboard();
-        clipboard.set_text(&command);
+        self.clipboard().set_text(&command);
         tracing::debug!("Selected: {} ({})", &command, symbol.id());
         self.show_toast(gettext("Copied “{}”").replace("{}", &command));
     }
