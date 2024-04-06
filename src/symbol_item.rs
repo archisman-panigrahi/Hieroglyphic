@@ -68,7 +68,7 @@ impl SymbolItem {
             .property("id", symbol.id())
             .property("icon", &format!("{}-symbolic", symbol.id()))
             .property("command", symbol.command)
-            .property("package", format!("\\usepackage{{ {} }}", symbol.package))
+            .property("package", symbol.package)
             .property(
                 "mode",
                 match (symbol.math_mode, symbol.text_mode) {
