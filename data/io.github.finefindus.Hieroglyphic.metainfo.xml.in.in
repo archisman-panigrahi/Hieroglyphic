@@ -25,7 +25,7 @@
     </screenshot>
     <screenshot environment="gnome">
         <image>https://raw.githubusercontent.com/FineFindus/Hieroglyphic/main/data/resources/screenshots/placeholder.png</image>
-        <caption>Main Window (Adwaita-Dark)</caption>
+        <caption>Placeholder</caption>
     </screenshot>
     <screenshot type="default" environment="gnome:dark">
         <image>https://raw.githubusercontent.com/FineFindus/Hieroglyphic/main/data/resources/screenshots/window_dark.png</image>
@@ -33,7 +33,7 @@
     </screenshot>
     <screenshot environment="gnome:dark">
         <image>https://raw.githubusercontent.com/FineFindus/Hieroglyphic/main/data/resources/screenshots/placeholder_dark.png</image>
-        <caption>Main Window (Adwaita-Dark)</caption>
+        <caption>Placeholder</caption>
     </screenshot>
   </screenshots>
 
