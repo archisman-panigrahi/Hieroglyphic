@@ -292,10 +292,10 @@ impl HieroglyphicWindow {
         tracing::trace!("Drag update at {},{}", x, y);
         let mut stroke = self.imp().current_stroke.borrow_mut();
         //x,y refers to movements relative to start coord
-        let detexify::Point {
+        let &detexify::Point {
             x: prev_x,
             y: prev_y,
-        } = stroke.points().next().copied().unwrap();
+        } = stroke.points().next().unwrap();
         stroke.add_point(detexify::Point {
             x: prev_x + x,
             y: prev_y + y,
