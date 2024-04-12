@@ -47,6 +47,18 @@
   <content_rating type="oars-1.1" />
 
   <releases>
+    <release version="1.1.0" date="2024-03-13">
+      <description>
+        <p>This update refines the user interface:</p>
+        <ul>
+          <li>New icon</li>
+          <li>Updated to the latest GNOME components</li>
+          <li>Improved recognition speed and overall application responsiveness</li>
+          <li>Shortcut to quickly delete the drawn symbol</li>
+          <li>Various minor UI improvements and tweaks</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.0.1" date="2024-03-13">
       <description>
         <p>Fixed failing appstream metadata</p>
