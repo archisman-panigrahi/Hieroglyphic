@@ -21,7 +21,7 @@ strip = true
 [dependencies]
 # GTK
 gettext-rs = { version = "0.7", features = ["gettext-system"] }
-gtk = { version = "0.8", package = "gtk4", features = ["v4_12"] }
+gtk = { version = "0.8", package = "gtk4", features = ["v4_14"] }
 adw = { package = "libadwaita", version = "0.6", features = ["v1_5"] }
 tracing = "0.1"
 tracing-subscriber = "0.3"
