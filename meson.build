@@ -3,7 +3,6 @@ project(
   'rust',
   version: '1.1.0',
   meson_version: '>= 0.59',
-  license: 'MIT',
 )
 
 i18n = import('i18n')
@@ -15,7 +14,7 @@ dependency('glib-2.0', version: '>= 2.66')
 dependency('gio-2.0', version: '>= 2.66')
 dependency('gtk4', version: '>= 4.0.0')
 
-glib_compile_resources = find_program('glib-compile-resources', required: true)
+find_program('glib-compile-resources', required: true)
 glib_compile_schemas = find_program('glib-compile-schemas', required: true)
 desktop_file_validate = find_program('desktop-file-validate', required: false)
 appstreamcli = find_program('appstreamcli', required: false)
@@ -51,13 +50,19 @@ endif
 meson.add_dist_script(
   'build-aux/dist-vendor.sh',
   meson.project_build_root() / 'meson-dist' / meson.project_name() + '-' + version,
-  meson.project_source_root()
+  meson.project_source_root(),
 )
 
 if get_option('profile') == 'development'
   # Setup pre-commit hook for ensuring coding style is always consistent
   message('Setting up git pre-commit hook..')
-  run_command('cp', '-f', 'hooks/pre-commit.hook', '.git/hooks/pre-commit', check: false)
+  run_command(
+    'cp',
+    '-f',
+    'hooks/pre-commit.hook',
+    '.git/hooks/pre-commit',
+    check: false,
+  )
 endif
 
 subdir('data')
