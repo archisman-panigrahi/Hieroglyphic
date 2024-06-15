@@ -25,6 +25,10 @@ If you work with LaTeX, you know it's difficult to memorize the names of all the
 ### Flatpak
 <a href='https://flathub.org/apps/details/io.github.finefindus.Hieroglyphic'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-i-en.png'/></a>
 
+Other installation methods:
+
+[![Packaging status](https://repology.org/badge/vertical-allrepos/hieroglyphic.svg)](https://repology.org/project/hieroglyphic/versions)
+
 ## Contributing
 
 Contributors are expected to follow the [GNOME Code of Conduct](https://conduct.gnome.org/).
