@@ -22,7 +22,6 @@ If you work with LaTeX, you know it's difficult to memorize the names of all the
 
 ## Installation
 
-### Flatpak
 <a href='https://flathub.org/apps/details/io.github.finefindus.Hieroglyphic'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-i-en.png'/></a>
 
 ## Contributing
