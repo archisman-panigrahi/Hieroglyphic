@@ -1,0 +1,27 @@
+Source: hieroglyphic
+Section: utils
+Priority: optional
+Maintainer: Archisman Panigrahi <apandada1@gmail.com>
+Build-Depends: debhelper-compat(=10),
+	desktop-file-utils,
+	gettext,
+	meson (>= 0.50),
+	pkg-config,
+	libglib2.0-dev,
+	libadwaita-1-dev,
+	appstream,
+	cargo,
+	blueprint-compiler
+Standards-Version: 4.5.0
+Rules-Requires-Root: no
+Homepage: https://github.com/FineFindus/Hieroglyphic
+Vcs-Browser: https://github.com/FineFindus/Hieroglyphic
+Vcs-Git: https://github.com/FineFindus/Hieroglyphic.git
+
+Package: blanket
+Architecture: all
+Depends: ${misc:Depends},
+	gir1.2-adw-1
+Description: Listen to different sounds
+ Improve focus and increase your productivity by listening to different sounds.
+ Or allows you to fall asleep in a noisy environment.
