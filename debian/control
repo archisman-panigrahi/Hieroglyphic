@@ -9,10 +9,9 @@ Homepage: https://github.com/FineFindus/Hieroglyphic
 Vcs-Browser: https://github.com/FineFindus/Hieroglyphic
 Vcs-Git: https://github.com/FineFindus/Hieroglyphic.git
 
-Package: blanket
+Package: hieroglyphic
 Architecture: amd64
 Depends: ${misc:Depends},
 	gir1.2-adw-1
-Description: Listen to different sounds
- Improve focus and increase your productivity by listening to different sounds.
- Or allows you to fall asleep in a noisy environment.
+Description: Find LaTeX symbols
+ If you work with LaTeX, you know it's difficult to memorize the names of all the symbols. Hieroglyphic allows you to search through over 1000 different LaTeX symbols by sketching. Once you found the desired symbol you can copy it to the clipboard by clicking on the entry. Hieroglyphic is based of detexify and is powered by a port of the detexify classifier.
