@@ -30,5 +30,5 @@ pango = "0.19"
 cairo-rs = "0.19"
 # TeX classification
 detexify = { git = "https://github.com/FineFindus/detexify-rust.git", rev = "d3750a6531bc92826ad2a2bd013cc5fe06f9e3ae" }
-itertools = "0.12"
+itertools = "0.13"
 async-channel = "2.2"
