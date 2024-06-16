@@ -1,0 +1,28 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name[de]=Hieroglyphic
+Name[fr]=Hiéroglyphe
+Name[it]=Geroglifico
+Name[nb]=Hieroglyphic
+Name[hu]=Hieroglyphic
+Name=Hieroglyphic
+Comment[de]=Durchsuche über 1000 verschiedene LaTeX-Symbole durch Skizzieren
+Comment[fr]=Recherchez parmi plus de 1000 symboles LaTeX différents en les esquissant
+Comment[it]=Cerca tra oltre 1000 simboli LaTeX diversi disegnando
+Comment[nb]=Finn riktig spesialtegn
+Comment[hu]=Böngéssz több mint 1000 különböző LaTeX szimbólumot skicceléssel
+Comment=Search through over 1000 different LaTeX symbols by sketching
+Type=Application
+Exec=hieroglyphic
+Terminal=false
+Categories=Utility;GTK;
+# Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+Keywords[de]=GTK;Tools;LaTeX;TeX;Symbole;
+Keywords[fr]=GTK;Outils;LaTeX;TeX;Symboles;
+Keywords[it]=GTK;Strumenti;LaTeX;TeX;Simboli;
+Keywords[nb]=LaTeX;tegn;spesialtegn;symbol;sett inn;innsetting;TeX;
+Keywords[hu]=GTK;Tools;LaTeX;TeX;szimbólumok;
+Keywords=GTK;Tools;LaTeX;TeX;Symbols;
+# Translators: Do NOT translate or transliterate this text (this is an icon file name)!
+Icon=io.github.finefindus.Hieroglyphic
+StartupNotify=true
