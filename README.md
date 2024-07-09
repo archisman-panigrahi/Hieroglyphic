@@ -22,7 +22,7 @@ If you work with LaTeX, you know it's difficult to memorize the names of all the
 
 ## Installation
 
-<a href='https://flathub.org/apps/details/io.github.finefindus.Hieroglyphic'><img width='240' alt='Download on Flathub' src='https://flathub.org/api/badge?locale=en'/></a>
+<a href='https://flathub.org/apps/details/io.github.finefindus.Hieroglyphic'><img width='240' alt='Download on Flathub' src='https://flathub.org/api/badge?locale=en&light'/></a>
 
 ## Contributing
 
