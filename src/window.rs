@@ -131,11 +131,18 @@ impl HieroglyphicWindow {
         let selection_model = gtk::NoSelection::new(Some(model));
         self.imp().symbol_list.bind_model(
             Some(&selection_model),
-            glib::clone!(@weak self as window => @default-panic, move |obj| {
-                let symbol_object = obj.downcast_ref::<gtk::StringObject>().expect("Object should be of type `StringObject`");
-                let symbol_item = SymbolItem::new(detexify::Symbol::from_id(symbol_object.string().as_str()).expect("`symbol_object` should be a valid symbol id"));
-                symbol_item.upcast()
-            }),
+            glib::clone!(
+                move |obj| {
+                    let symbol_object = obj
+                        .downcast_ref::<gtk::StringObject>()
+                        .expect("Object should be of type `StringObject`");
+                    let symbol_item = SymbolItem::new(
+                        detexify::Symbol::from_id(symbol_object.string().as_str())
+                            .expect("`symbol_object` should be a valid symbol id"),
+                    );
+                    symbol_item.upcast()
+                }
+            ),
         );
     }
 
@@ -178,20 +185,24 @@ impl HieroglyphicWindow {
             }
         });
 
-        glib::spawn_future_local(glib::clone!(@weak self as window => async move {
-            tracing::debug!("Listening for classifications");
-            while let Ok(Some(classifications)) = res_rx.recv().await {
-                window.imp().stack.set_visible_child_name("symbols");
-                let symbols = window.symbols();
-                symbols.remove_all();
+        glib::spawn_future_local(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            async move {
+                tracing::debug!("Listening for classifications");
+                while let Ok(Some(classifications)) = res_rx.recv().await {
+                    window.imp().stack.set_visible_child_name("symbols");
+                    let symbols = window.symbols();
+                    symbols.remove_all();
 
-                // switching out all 1k symbols takes too long, so only display the first 25
-                // TODO: find faster ways and display all
-                for symbol in classifications.iter().take(25) {
-                    symbols.append(&gtk::StringObject::new(&symbol.id))
+                    // switching out all 1k symbols takes too long, so only display the first 25
+                    // TODO: find faster ways and display all
+                    for symbol in classifications.iter().take(25) {
+                        symbols.append(&gtk::StringObject::new(&symbol.id))
+                    }
                 }
             }
-        }));
+        ));
     }
 
     fn classify(&self) {
@@ -221,18 +232,27 @@ impl HieroglyphicWindow {
     }
 
     fn setup_drawing_area(&self) {
-        self.imp().drawing_area.set_draw_func(
-            glib::clone!(@weak self as window => move |_area: &gtk::DrawingArea, ctx: &cairo::Context, width, height| {
+        self.imp().drawing_area.set_draw_func(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            move |_area: &gtk::DrawingArea, ctx: &cairo::Context, width, height| {
                 let mut surface = window.imp().surface.borrow_mut();
                 let surface = surface.get_or_insert_with(|| window.create_surface(width, height));
 
-                ctx.set_source_surface(surface, 0.0, 0.0).expect("Failed to set surface");
+                ctx.set_source_surface(surface, 0.0, 0.0)
+                    .expect("Failed to set surface");
                 ctx.set_source_color(&window.line_color());
                 ctx.set_line_width(3.0);
                 ctx.set_line_cap(cairo::LineCap::Round);
 
                 let curr_stroke = window.imp().current_stroke.borrow().clone();
-                for stroke in window.imp().strokes.borrow().iter().chain(std::iter::once(&curr_stroke)) {
+                for stroke in window
+                    .imp()
+                    .strokes
+                    .borrow()
+                    .iter()
+                    .chain(std::iter::once(&curr_stroke))
+                {
                     tracing::trace!("Drawing: {:?}", stroke);
                     let mut looped = false;
                     for (p, q) in stroke.points().tuple_windows() {

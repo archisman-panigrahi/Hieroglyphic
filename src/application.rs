@@ -117,7 +117,7 @@ impl HieroglyphicApplication {
     }
 
     fn show_about_dialog(&self) {
-        about::window().present(&self.main_window());
+        about::window().present(Some(&self.main_window()));
     }
 
     pub fn run(&self) -> glib::ExitCode {

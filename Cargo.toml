@@ -21,13 +21,13 @@ strip = true
 [dependencies]
 # GTK
 gettext-rs = { version = "0.7", features = ["gettext-system"] }
-gtk = { version = "0.8", package = "gtk4", features = ["v4_14"] }
-adw = { package = "libadwaita", version = "0.6", features = ["v1_5"] }
+gtk = { version = "0.9", package = "gtk4", features = ["v4_14"] }
+adw = { package = "libadwaita", version = "0.7", features = ["v1_5"] }
 tracing = "0.1"
 tracing-subscriber = "0.3"
-gdk-pixbuf = "0.19"
-pango = "0.19"
-cairo-rs = "0.19"
+gdk-pixbuf = "0.20"
+pango = "0.20"
+cairo-rs = "0.20"
 # TeX classification
 detexify = { git = "https://github.com/FineFindus/detexify-rust.git", rev = "d3750a6531bc92826ad2a2bd013cc5fe06f9e3ae" }
 itertools = "0.13"
