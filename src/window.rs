@@ -131,18 +131,16 @@ impl HieroglyphicWindow {
         let selection_model = gtk::NoSelection::new(Some(model));
         self.imp().symbol_list.bind_model(
             Some(&selection_model),
-            glib::clone!(
-                move |obj| {
-                    let symbol_object = obj
-                        .downcast_ref::<gtk::StringObject>()
-                        .expect("Object should be of type `StringObject`");
-                    let symbol_item = SymbolItem::new(
-                        detexify::Symbol::from_id(symbol_object.string().as_str())
-                            .expect("`symbol_object` should be a valid symbol id"),
-                    );
-                    symbol_item.upcast()
-                }
-            ),
+            glib::clone!(move |obj| {
+                let symbol_object = obj
+                    .downcast_ref::<gtk::StringObject>()
+                    .expect("Object should be of type `StringObject`");
+                let symbol_item = SymbolItem::new(
+                    detexify::Symbol::from_id(symbol_object.string().as_str())
+                        .expect("`symbol_object` should be a valid symbol id"),
+                );
+                symbol_item.upcast()
+            }),
         );
     }
 
