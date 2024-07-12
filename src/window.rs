@@ -136,7 +136,7 @@ impl HieroglyphicWindow {
                     .downcast_ref::<gtk::StringObject>()
                     .expect("Object should be of type `StringObject`");
                 let symbol_item = SymbolItem::new(
-                    detexify::Symbol::from_id(symbol_object.string().as_str())
+                    detexify::Symbol::from_id(&symbol_object.string())
                         .expect("`symbol_object` should be a valid symbol id"),
                 );
                 symbol_item.upcast()
