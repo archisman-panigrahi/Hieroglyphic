@@ -6,6 +6,7 @@
     <file compressed="true" preprocess="xml-stripblanks">ui/window.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/symbol-item.ui</file>
     <file compressed="true">style.css</file>
+    <file>../model.onnx</file>
 </gresource>
 <gresource prefix="/io/github/finefindus/Hieroglyphic/icons/scalable/actions">
     <file preprocess="xml-stripblanks" alias="eraser-symbolic.svg">icons/eraser5-symbolic.svg</file>

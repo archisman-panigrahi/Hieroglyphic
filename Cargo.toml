@@ -29,6 +29,7 @@ gdk-pixbuf = "0.20"
 pango = "0.20"
 cairo-rs = "0.20"
 # TeX classification
-detexify = { git = "https://github.com/FineFindus/detexify-rust.git", rev = "d3750a6531bc92826ad2a2bd013cc5fe06f9e3ae" }
+detexify = { git = "https://github.com/FineFindus/detexify-rust.git", rev = "311002feb0519f483ef1f9cc8206648286128ff5" }
 itertools = "0.13"
 async-channel = "2.2"
+tract-onnx = "0.21.6"

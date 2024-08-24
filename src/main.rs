@@ -2,6 +2,7 @@ mod application;
 #[rustfmt::skip]
 mod config;
 mod about;
+mod classify;
 mod symbol_item;
 mod window;
 

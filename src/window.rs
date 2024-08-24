@@ -7,6 +7,7 @@ use gtk::{gio, glib};
 use itertools::Itertools;
 
 use crate::application::HieroglyphicApplication;
+use crate::classify;
 use crate::symbol_item::SymbolItem;
 
 mod imp {
@@ -150,7 +151,7 @@ impl HieroglyphicWindow {
         self.imp().sender.set(req_tx).expect("Failed to set tx");
         gio::spawn_blocking(move || {
             tracing::info!("Classifier thread started");
-            let classifier = detexify::Classifier::default();
+            let classifier = classify::Classifier::new().expect("Failed to setup classifier");
 
             loop {
                 let Some(strokes) = req_rx.iter().next() else {
@@ -159,7 +160,7 @@ impl HieroglyphicWindow {
                     return;
                 };
 
-                let classifications: Option<Vec<detexify::Score>> = 'classify: {
+                let classifications: Option<Vec<&'static str>> = 'classify: {
                     let Some(sample) = detexify::StrokeSample::new(strokes) else {
                         tracing::warn!("Skipping classification on empty strokes");
                         break 'classify None;
@@ -196,7 +197,7 @@ impl HieroglyphicWindow {
                     // switching out all 1k symbols takes too long, so only display the first 25
                     // TODO: find faster ways and display all
                     for symbol in classifications.iter().take(25) {
-                        symbols.append(&gtk::StringObject::new(&symbol.id))
+                        symbols.append(&gtk::StringObject::new(symbol))
                     }
                 }
             }
