@@ -36,9 +36,9 @@ mod imp {
         pub toast: RefCell<Option<adw::Toast>>,
         pub surface: RefCell<Option<cairo::ImageSurface>>,
         pub symbols: OnceCell<gio::ListStore>,
-        pub strokes: RefCell<Vec<detexify::Stroke>>,
-        pub current_stroke: RefCell<detexify::Stroke>,
-        pub sender: OnceCell<Sender<Vec<detexify::Stroke>>>,
+        pub strokes: RefCell<Vec<classify::Stroke>>,
+        pub current_stroke: RefCell<classify::Stroke>,
+        pub sender: OnceCell<Sender<Vec<classify::Stroke>>>,
     }
 
     #[glib::object_subclass]
@@ -71,7 +71,7 @@ mod imp {
                 obj.add_css_class("devel");
             }
 
-            tracing::debug!("Loaded {} symbols", detexify::iter_symbols().count());
+            tracing::debug!("Loaded {} symbols", classify::iter_symbols().count());
 
             obj.setup_symbol_list();
             obj.setup_drawing_area();
@@ -137,7 +137,7 @@ impl HieroglyphicWindow {
                     .downcast_ref::<gtk::StringObject>()
                     .expect("Object should be of type `StringObject`");
                 let symbol_item = SymbolItem::new(
-                    detexify::Symbol::from_id(&symbol_object.string())
+                    classify::Symbol::from_id(&symbol_object.string())
                         .expect("`symbol_object` should be a valid symbol id"),
                 );
                 symbol_item.upcast()
@@ -160,14 +160,14 @@ impl HieroglyphicWindow {
                     return;
                 };
 
-                let classifications: Option<Vec<&'static str>> = 'classify: {
-                    let Some(sample) = detexify::StrokeSample::new(strokes) else {
-                        tracing::warn!("Skipping classification on empty strokes");
-                        break 'classify None;
-                    };
+                if strokes.is_empty() {
+                    tracing::warn!("Skipping classification on empty strokes");
+                    continue;
+                }
 
+                let classifications: Option<Vec<&'static str>> = 'classify: {
                     let start = Instant::now();
-                    let Some(results) = classifier.classify(sample) else {
+                    let Some(results) = classifier.classify(strokes) else {
                         tracing::warn!("Classifier returned None");
                         break 'classify None;
                     };
@@ -295,7 +295,7 @@ impl HieroglyphicWindow {
         self.imp()
             .current_stroke
             .borrow_mut()
-            .add_point(detexify::Point { x, y });
+            .add_point(classify::Point { x, y });
         self.imp().drawing_area.queue_draw();
     }
 
@@ -304,11 +304,11 @@ impl HieroglyphicWindow {
         tracing::trace!("Drag update at {},{}", x, y);
         let mut stroke = self.imp().current_stroke.borrow_mut();
         //x,y refers to movements relative to start coord
-        let &detexify::Point {
+        let &classify::Point {
             x: prev_x,
             y: prev_y,
         } = stroke.points().next().unwrap();
-        stroke.add_point(detexify::Point {
+        stroke.add_point(classify::Point {
             x: prev_x + x,
             y: prev_y + y,
         });

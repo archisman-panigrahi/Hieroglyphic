@@ -1,8 +1,22 @@
+pub mod point;
+mod rect;
+pub mod stroke;
+mod symbol;
+
 use std::io::BufReader;
 
-use detexify::Point;
 use itertools::Itertools;
 use tract_onnx::{prelude::*, tract_core::ndarray::Array4};
+
+pub use self::point::Point;
+pub use self::stroke::Stroke;
+pub use self::symbol::iter_symbols;
+pub use self::symbol::Symbol;
+
+use self::{
+    point::{ONE_POINT, ZERO_POINT},
+    rect::Rect,
+};
 
 type OnnxModel = SimplePlan<TypedFact, Box<dyn TypedOp>, Graph<TypedFact, Box<dyn TypedOp>>>;
 
@@ -22,18 +36,13 @@ impl Classifier {
             .model_for_read(&mut BufReader::new(
                 &include_bytes!("../../data/model.onnx")[..],
             ))?
-            // is this needed?
-            // .with_input_fact(
-            //     0,
-            //     InferenceFact::dt_shape(f32::datum_type(), tvec![1, 3, 32, 32]),
-            // )?
             .into_optimized()?
             .into_runnable()?;
         Ok(Self { model })
     }
 
     /// Tries to classify the given strokes into a symbol.
-    pub fn classify(&self, sample: detexify::StrokeSample) -> Option<Vec<&'static str>> {
+    pub fn classify(&self, sample: Vec<Stroke>) -> Option<Vec<&'static str>> {
         let input_tensor: Tensor = self.prepate_input(sample).into();
 
         let result = self.model.run(tvec!(input_tensor.into())).ok()?;
@@ -49,12 +58,29 @@ impl Classifier {
     ///
     /// This is equivalent to drawing the strokes onto an image and
     /// than converting the image data into an array.
-    fn prepate_input(&self, sample: detexify::StrokeSample) -> Array4<f32> {
+    fn prepate_input(&self, sample: Vec<Stroke>) -> Array4<f32> {
         let mut array = Array4::<f32>::zeros((1, 3, 32, 32));
 
-        for stroke in sample.strokes {
+        let mut strokes: Vec<Stroke> = sample.into_iter().filter(|s| !s.is_empty()).collect();
+
+        if strokes.is_empty() {
+            return array;
+        }
+
+        strokes.truncate(10);
+        for stroke in strokes.iter_mut() {
+            stroke.dedup();
+            stroke.smooth();
+            stroke.aspect_refit(Rect::new(ZERO_POINT, ONE_POINT));
+            stroke.redistribute(10);
+            stroke.dedup();
+            stroke.dominant(2.0 * std::f64::consts::PI * 15.0 / 360.0)
+        }
+
+        for stroke in strokes {
             for (p, q) in stroke
                 .points()
+                // scale points from [0,1] to [0,31]
                 .map(|Point { x, y }| ((x * 31.0).round() as i32, (y * 31.0).round() as i32))
                 .tuple_windows()
             {
@@ -105,6 +131,7 @@ impl Classifier {
 }
 
 fn top_k_indices(arr: &[f32], k: usize) -> Vec<usize> {
+    assert_eq!(arr.len(), LABELS.len());
     let mut indices: Vec<usize> = (0..arr.len()).collect();
     indices.sort_by(|&a, &b| arr[b].partial_cmp(&arr[a]).unwrap());
     indices.into_iter().take(k).collect()

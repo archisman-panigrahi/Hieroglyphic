@@ -2,6 +2,8 @@ use glib::Object;
 use gtk::subclass::prelude::*;
 use gtk::{glib, prelude::ObjectExt};
 
+use crate::classify;
+
 mod imp {
 
     use std::cell::RefCell;
@@ -63,7 +65,7 @@ glib::wrapper! {
 
 #[gtk::template_callbacks]
 impl SymbolItem {
-    pub fn new(symbol: detexify::Symbol) -> Self {
+    pub fn new(symbol: classify::Symbol) -> Self {
         Object::builder()
             .property("id", symbol.id())
             .property("icon", &format!("{}-symbolic", symbol.id()))
