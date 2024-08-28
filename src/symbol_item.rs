@@ -75,7 +75,10 @@ impl SymbolItem {
                     (true, true) => "mathmode & textmode",
                     (false, true) => "textmode",
                     (true, false) => "mathmode",
-                    (false, false) => "",
+                    (false, false) => {
+                        // a symbol has to be either math mode or textmode
+                        unreachable!("Symbol {} is neither math nor textmode", symbol.id())
+                    }
                 },
             )
             .build()
