@@ -1,14 +1,62 @@
 use std::ops::{Add, Mul, Sub};
 
+// Original code from:
+// https://github.com/FineFindus/detexify-rust/blob/311002feb0519f483ef1f9cc8206648286128ff5/src/point.rs
+
+/// Point located at the origin (0,0)
 pub(super) const ZERO_POINT: Point = Point { x: 0.0, y: 0.0 };
+/// Point located at (1,1)
 pub(super) const ONE_POINT: Point = Point { x: 1.0, y: 1.0 };
 
+/// δ-value for comparing if two points are equal.
 const DELTA: f64 = 1e-10;
 
+/// A simple point, consisting of a (x, y) coordinate.
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Point {
+    /// The x-coordinate of the point.
     pub x: f64,
+    /// The y-coordinate of the point.
     pub y: f64,
+}
+
+impl Point {
+    /// Computes the dot product between self and another point.
+    pub(super) fn dot(&self, p: &Point) -> f64 {
+        (self.x * p.x) + (self.y * p.y)
+    }
+
+    /// Computes the `euclidean` norm.
+    pub(super) fn norm(&self) -> f64 {
+        self.dot(self).sqrt()
+    }
+
+    /// Compute the euclidean distance to a [`Point`] `p`
+    pub(super) fn euclidean_distance(&self, &p: &Point) -> f64 {
+        (*self - p).norm()
+    }
+
+    /// Scales the point by `x` and `y`.
+    pub(super) fn scale(self, x: f64, y: f64) -> Point {
+        Point {
+            x: self.x * x,
+            y: self.y * y,
+        }
+    }
+
+    /// Check if the given [`Point`] is withhin [`DELTA`] of self.
+    pub(super) fn approx_eq(&self, p: Point) -> bool {
+        self.euclidean_distance(&p) < DELTA
+    }
+
+    /// Calculates the angle (in radians) between two vectors formed by three [`Point`]s:
+    /// `self` (the origin point), `p` (an intermediate point), and `q` (the endpoint).
+    pub(super) fn angle(&self, p: Point, q: Point) -> f64 {
+        let v = p - *self;
+        let w = q - p;
+
+        v.dot(&w) / (v.norm() * w.norm()).clamp(-1.0, 1.0).acos()
+    }
 }
 
 impl Add for Point {
@@ -44,58 +92,6 @@ impl Mul<f64> for Point {
     }
 }
 
-fn clamp(v: f64, min: f64, max: f64) -> f64 {
-    if v < min {
-        min
-    } else if v > max {
-        max
-    } else {
-        v
-    }
-}
-
-impl Point {
-    pub(super) fn dot(p: Point, q: Point) -> f64 {
-        (p.x * q.x) + (p.y * q.y)
-    }
-
-    pub(super) fn norm(self) -> f64 {
-        Point::dot(self, self).sqrt()
-    }
-
-    pub(super) fn euclidean_distance(p: Point, q: Point) -> f64 {
-        (p - q).norm()
-    }
-
-    pub(super) fn manhattan_distance(p: Point, q: Point) -> f64 {
-        (p.x - q.x).abs() + (p.y - q.y).abs()
-    }
-
-    pub(super) fn scale_x(self, x: f64) -> Point {
-        Point {
-            x: self.x * x,
-            y: self.y,
-        }
-    }
-
-    pub(super) fn scale_y(self, y: f64) -> Point {
-        Point {
-            x: self.x,
-            y: self.y * y,
-        }
-    }
-
-    pub(super) fn approx_eq(p: Point, q: Point) -> bool {
-        Point::euclidean_distance(p, q) < DELTA
-    }
-
-    pub(super) fn angle(p: Point, q: Point, r: Point) -> f64 {
-        let v = q - p;
-        let w = r - q;
-        clamp(Point::dot(v, w) / (v.norm() * w.norm()), -1.0, 1.0).acos()
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -125,12 +121,9 @@ mod tests {
 
     #[test]
     fn test_approx_eq_vec() {
-        assert!(Point::approx_eq(
-            Point { x: 1.0, y: 3.0 },
-            Point {
-                x: 1.0 + SMALL_DELTA,
-                y: 3.0 - SMALL_DELTA
-            }
-        ));
+        assert!(Point { x: 1.0, y: 3.0 }.approx_eq(Point {
+            x: 1.0 + SMALL_DELTA,
+            y: 3.0 - SMALL_DELTA
+        }));
     }
 }

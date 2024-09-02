@@ -36,5 +36,5 @@ phf = "0.11"
 
 [build-dependencies]
 phf_codegen = "0.11"
-yaml-rust = "0.4"
+yaml-rust2 = "0.8.1"
 base32 = "0.5"

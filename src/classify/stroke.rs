@@ -1,99 +1,104 @@
+use super::{point::Point, rect::Rect};
 use itertools::Itertools;
 use std::collections::VecDeque;
 
-use super::{point::Point, rect::Rect};
+// Original code from:
+// https://github.com/FineFindus/detexify-rust/blob/311002feb0519f483ef1f9cc8206648286128ff5/src/stroke.rs
 
+/// A list of connectect [`Point`]s.
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct Stroke(Vec<Point>);
 
 impl Stroke {
-    pub fn new(points: Vec<Point>) -> Self {
-        Stroke(points)
+    /// Create a new [`Stoke`] with the given points.
+    pub const fn new(points: Vec<Point>) -> Self {
+        Self(points)
     }
 
-    pub(crate) fn is_empty(&self) -> bool {
+    /// Returns true if the stroke does not contain any [`Point`]s.
+    pub(super) fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
 
+    /// Returns an iterator over the points of the stroke.
     pub fn points(&self) -> impl Iterator<Item = &Point> {
         self.0.iter()
     }
 
+    /// Clears the stroke, removing all points.
     pub fn clear(&mut self) {
         self.0.clear();
     }
 
+    /// Appends a new [`Point`] to the end of the stroke.
     pub fn add_point(&mut self, point: Point) {
         self.0.push(point)
     }
 
-    pub(crate) fn length(&self) -> f64 {
-        self.0.iter().tuple_windows().fold(0.0, |distance, (p, q)| {
-            distance + Point::euclidean_distance(*p, *q)
-        })
+    /// Computes the total length of the strokes.
+    /// The length is defined as the sum of the distance all points.
+    pub(super) fn length(&self) -> f64 {
+        self.0
+            .iter()
+            .tuple_windows()
+            .fold(0.0, |distance, (p, q)| distance + p.euclidean_distance(q))
     }
 
-    pub(crate) fn bounding_box(&self) -> Rect {
-        assert!(!self.0.is_empty());
-
-        let mut bb = Rect::from_point(self.0[0]);
-
-        for point in self.0.iter().skip(1) {
-            if bb.lower_left.x > point.x {
-                bb.lower_left.x = point.x;
-            }
-            if bb.lower_left.y > point.y {
-                bb.lower_left.y = point.y;
-            }
-            if bb.upper_right.x < point.x {
-                bb.upper_right.x = point.x;
-            }
-            if bb.upper_right.y < point.y {
-                bb.upper_right.y = point.y;
-            }
-        }
-
-        bb
+    /// Computes a bounding box encompassing all points in the stroke.
+    ///
+    /// # Panics
+    /// Panics if the stroke is empty.
+    pub(super) fn bounding_box(&self) -> Rect {
+        assert!(!self.is_empty());
+        self.0
+            .iter()
+            .skip(1)
+            .fold(Rect::from_point(self.0[0]), |mut bb, point| {
+                bb.encompass_point(point);
+                bb
+            })
     }
 
-    pub(crate) fn refit(&mut self, rect: Rect) {
+    /// Maps all points to fit within the given [`Rect`].
+    fn refit(&mut self, rect: Rect) {
         let bb = self.bounding_box();
+        let scale_x = if bb.width() == 0.0 {
+            1.0
+        } else {
+            1.0 / bb.width() * rect.width()
+        };
+
+        let scale_y = if bb.height() == 0.0 {
+            1.0
+        } else {
+            1.0 / bb.height() * rect.height()
+        };
+
+        let trans_x = if bb.width() == 0.0 {
+            rect.lower_left.x + 0.5 * rect.width()
+        } else {
+            rect.lower_left.x
+        };
+
+        let trans_y = if bb.height() == 0.0 {
+            rect.lower_left.y + 0.5 * rect.height()
+        } else {
+            rect.lower_left.y
+        };
+
+        let trans = Point {
+            x: trans_x,
+            y: trans_y,
+        };
 
         for point in self.0.iter_mut() {
-            let scale_x = if bb.width() == 0.0 {
-                1.0
-            } else {
-                1.0 / bb.width() * rect.width()
-            };
-
-            let scale_y = if bb.height() == 0.0 {
-                1.0
-            } else {
-                1.0 / bb.height() * rect.height()
-            };
-
-            let trans_x = if bb.width() == 0.0 {
-                rect.lower_left.x + 0.5 * rect.width()
-            } else {
-                rect.lower_left.x
-            };
-
-            let trans_y = if bb.height() == 0.0 {
-                rect.lower_left.y + 0.5 * rect.height()
-            } else {
-                rect.lower_left.y
-            };
-
-            let trans = Point {
-                x: trans_x,
-                y: trans_y,
-            };
-
-            *point = (*point - bb.lower_left).scale_x(scale_x).scale_y(scale_y) + trans
+            *point = (*point - bb.lower_left).scale(scale_x, scale_y) + trans
         }
     }
 
-    pub(crate) fn aspect_refit(&mut self, target: Rect) {
+    /// Maps all points to fit within the given [`Rect`],
+    /// whilst keeping the aspect-ration and relative distance between the points the same.
+    pub(super) fn aspect_refit(&mut self, target: Rect) {
         let source = self.bounding_box();
 
         let rect = if source.is_point() {
@@ -128,29 +133,36 @@ impl Stroke {
         self.refit(rect)
     }
 
-    pub(crate) fn dedup(&mut self) {
-        self.0.dedup_by(|&mut p, &mut q| Point::approx_eq(p, q));
+    /// Removes duplicate (points that are nearly identical) [`Point`]s.
+    pub(super) fn dedup(&mut self) {
+        self.0.dedup_by(|&mut p, &mut q| p.approx_eq(q));
     }
 
-    pub(crate) fn smooth(&mut self) {
-        if self.0.len() < 3 {
+    /// Smooths the stroke.
+    ///
+    /// This is done by averaging the points of the stroke.
+    pub(super) fn smooth(&mut self) {
+        let len = self.0.len();
+        if len < 3 {
             return;
         }
 
-        let mut smoothed = Vec::with_capacity(self.0.len());
-
+        let mut smoothed = Vec::with_capacity(len);
+        // keep start and end point the same
         smoothed.push(self.0[0]);
-
-        for (&x, &y, &z) in self.0.iter().tuple_windows() {
-            smoothed.push((x + y + z) * (1.0 / 3.0));
-        }
-
+        // average triplets of all points
+        smoothed.extend(
+            self.points()
+                .tuple_windows()
+                .map(|(&x, &y, &z)| (x + y + z) * 3.0f64.recip()),
+        );
         smoothed.push(*self.0.last().unwrap());
 
         self.0 = smoothed;
     }
 
-    pub(crate) fn redistribute(&mut self, n: usize) {
+    /// Redistribute the points in the stroke to have equal distance to each other.
+    pub(super) fn redistribute(&mut self, n: usize) {
         // degenerate cases
         if self.0.len() < 2 {
             return;
@@ -197,27 +209,25 @@ impl Stroke {
         self.0 = distributed;
     }
 
-    pub(crate) fn dominant(&mut self, alpha: f64) {
+    /// Filter the points to only contain dominant points,
+    /// based on the given alpha angle threshold.
+    pub(super) fn dominant(&mut self, alpha: f64) {
         if self.0.len() < 3 {
             return;
         }
 
         let mut new_stroke = Vec::with_capacity(self.0.len());
         new_stroke.push(self.0[0]);
-
-        for (&p, &q, &r) in self.0.iter().tuple_windows() {
-            if Point::angle(p, q, r) >= alpha {
-                new_stroke.push(q);
-            }
-        }
-
+        new_stroke.extend(
+            self.points()
+                .tuple_windows()
+                //TODO: use >= or <=?
+                .filter(|(&p, &q, &r)| p.angle(q, r) <= alpha)
+                .map(|(&_p, &q, &_r)| q),
+        );
         new_stroke.push(*self.0.last().unwrap());
 
         self.0 = new_stroke;
-    }
-
-    pub(crate) fn concat(strokes: Vec<Stroke>) -> Vec<Point> {
-        strokes.into_iter().map(|s| s.0).concat()
     }
 }
 
