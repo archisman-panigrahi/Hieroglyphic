@@ -11,7 +11,7 @@ pub struct Symbol {
     /// Package which the symbol belongs to.
     pub package: &'static str,
     /// Font encoding used for the symbol.
-    pub font_encoding: &'static str,
+    font_encoding: &'static str,
     /// Whether the symbol is available in text mode.
     pub text_mode: bool,
     /// Whether the symbol is available in math mode.
@@ -32,13 +32,10 @@ impl Symbol {
             self.font_encoding,
             self.command.replace('\\', "_")
         );
-
-        // FIXME: don't leak memory
-        // TODO: remove this once https://github.com/sfackler/rust-phf/pull/185 is merged
-        Box::leak(
-            base32::encode(base32::Alphabet::Rfc4648 { padding: false }, id.as_bytes())
-                .into_boxed_str(),
-        )
+        let key = base32::encode(base32::Alphabet::Rfc4648 { padding: false }, id.as_bytes());
+        // SAFETY: safe to unwrap, since key must be valid, as it is only possible to get a Symbol
+        // from the symbol table
+        SYMBOL_TABLE.get_key(&key).unwrap()
     }
 }
 
