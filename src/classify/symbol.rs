@@ -1,5 +1,8 @@
 include!(concat!(env!("OUT_DIR"), "/symbol_table.rs"));
 
+/// Amount of available symbols
+pub static SYMBOL_COUNT: usize = SYMBOL_TABLE.len();
+
 // Original code from:
 // https://github.com/FineFindus/detexify-rust/blob/311002feb0519f483ef1f9cc8206648286128ff5/src/symbol.rs
 
@@ -39,15 +42,11 @@ impl Symbol {
     }
 }
 
-pub fn iter_symbols() -> impl Iterator<Item = Symbol> {
-    SYMBOL_TABLE.values().cloned()
-}
-
 #[cfg(test)]
 mod tests {
 
-    use super::iter_symbols;
     use super::Symbol;
+    use crate::classify::symbol::SYMBOL_TABLE;
 
     #[test]
     fn test_from_id() {
@@ -67,13 +66,13 @@ mod tests {
 
     #[test]
     fn test_iterate_symbols() {
-        assert_eq!(iter_symbols().count(), 1098);
+        assert_eq!(SYMBOL_TABLE.len(), 1098);
     }
 
     #[test]
     fn test_id_get_id() {
-        for symbol in iter_symbols() {
-            assert_eq!(Symbol::from_id(symbol.id()).unwrap(), symbol);
+        for symbol in SYMBOL_TABLE.values() {
+            assert_eq!(&Symbol::from_id(symbol.id()).unwrap(), symbol);
         }
     }
 }

@@ -71,7 +71,7 @@ mod imp {
                 obj.add_css_class("devel");
             }
 
-            tracing::debug!("Loaded {} symbols", classify::iter_symbols().count());
+            tracing::debug!("Loaded {} symbols", classify::SYMBOL_COUNT);
 
             obj.setup_symbol_list();
             obj.setup_drawing_area();
