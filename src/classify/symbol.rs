@@ -1,3 +1,5 @@
+use base64::Engine;
+
 include!(concat!(env!("OUT_DIR"), "/symbol_table.rs"));
 
 /// Amount of available symbols
@@ -35,7 +37,7 @@ impl Symbol {
             self.font_encoding,
             self.command.replace('\\', "_")
         );
-        let key = base32::encode(base32::Alphabet::Rfc4648 { padding: false }, id.as_bytes());
+        let key = base64::prelude::BASE64_STANDARD.encode(id);
         // SAFETY: safe to unwrap, since key must be valid, as it is only possible to get a Symbol
         // from the symbol table
         SYMBOL_TABLE.get_key(&key).unwrap()
@@ -50,7 +52,7 @@ mod tests {
 
     #[test]
     fn test_from_id() {
-        let symbol = Symbol::from_id("NRQXIZLYGJSS2T2UGEWV65DFPB2GC43DNFUWG2LSMN2W2");
+        let symbol = Symbol::from_id("bGF0ZXgyZS1PVDEtX3RleHRhc2NpaWNpcmN1bQ==");
 
         assert_eq!(
             symbol,

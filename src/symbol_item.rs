@@ -68,7 +68,11 @@ impl SymbolItem {
     pub fn new(symbol: classify::Symbol) -> Self {
         Object::builder()
             .property("id", symbol.id())
-            .property("icon", &format!("{}-symbolic", symbol.id()))
+            .property(
+                "icon",
+                // icon file names do not contain ending '='
+                &format!("{}-symbolic", symbol.id().trim_end_matches('=')),
+            )
             .property("command", symbol.command)
             .property("package", symbol.package)
             .property(

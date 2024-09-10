@@ -1,3 +1,4 @@
+use base64::Engine;
 use std::fs::File;
 use std::io::{BufWriter, Write};
 use std::path::Path;
@@ -23,7 +24,8 @@ impl Symbol {
             self.font_encoding,
             self.command.replace('\\', "_")
         );
-        base32::encode(base32::Alphabet::Rfc4648 { padding: false }, id.as_bytes())
+        base64::prelude::BASE64_STANDARD
+            .encode(id)
     }
 }
 
