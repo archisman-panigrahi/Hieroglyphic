@@ -199,6 +199,14 @@ impl HieroglyphicWindow {
                     for symbol in classifications.iter().take(25) {
                         symbols.append(&gtk::StringObject::new(symbol))
                     }
+                    // scroll to top after updating symbols, so that the most likely symbols are
+                    // visible first
+                    window
+                        .imp()
+                        .symbol_list
+                        .adjustment()
+                        .expect("Failed to get symbol list adjustment")
+                        .set_value(0.0)
                 }
             }
         ));
