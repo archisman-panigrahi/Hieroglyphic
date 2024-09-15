@@ -3,8 +3,8 @@ use std::time::Instant;
 use adw::prelude::*;
 use gettextrs::gettext;
 use gtk::gdk;
+use gtk::glib;
 use gtk::subclass::prelude::*;
-use gtk::{gio, glib};
 use itertools::Itertools;
 
 use crate::application::HieroglyphicApplication;
@@ -391,6 +391,14 @@ impl HieroglyphicWindow {
         let network_monitor = gio::NetworkMonitor::default();
         if network_monitor.is_network_metered() {
             tracing::debug!("Skipping data upload: network is metered");
+            return;
+        }
+
+        // skip uploading data whilst the user has power saving enabled
+        // see https://gitlab.gnome.org/GNOME/Initiatives/-/issues/43
+        let power_monitor = gio::PowerProfileMonitor::get_default();
+        if power_monitor.is_power_saver_enabled() {
+            tracing::debug!("Skipping data upload: power saver is active");
             return;
         }
 
