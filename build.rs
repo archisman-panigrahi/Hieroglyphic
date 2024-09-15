@@ -24,8 +24,7 @@ impl Symbol {
             self.font_encoding,
             self.command.replace('\\', "_")
         );
-        base64::prelude::BASE64_STANDARD
-            .encode(id)
+        base64::prelude::BASE64_STANDARD.encode(id)
     }
 }
 

@@ -157,9 +157,9 @@ impl HieroglyphicWindow {
             .expect("Failed to set symbol model");
 
         let selection_model = gtk::NoSelection::new(Some(model));
-        self.imp().symbol_list.bind_model(
-            Some(&selection_model),
-            glib::clone!(move |obj| {
+        self.imp()
+            .symbol_list
+            .bind_model(Some(&selection_model), move |obj| {
                 let symbol_object = obj
                     .downcast_ref::<gtk::StringObject>()
                     .expect("Object should be of type `StringObject`");
@@ -168,8 +168,7 @@ impl HieroglyphicWindow {
                         .expect("`symbol_object` should be a valid symbol id"),
                 );
                 symbol_item.upcast()
-            }),
-        );
+            });
     }
 
     fn setup_classifier(&self) {
@@ -233,7 +232,7 @@ impl HieroglyphicWindow {
                         .symbol_list
                         .adjustment()
                         .expect("Failed to get symbol list adjustment")
-                        .set_value(0.0)
+                        .set_value(0.0);
                 }
             }
         ));
@@ -270,6 +269,7 @@ impl HieroglyphicWindow {
             #[weak(rename_to = window)]
             self,
             move |_area: &gtk::DrawingArea, ctx: &cairo::Context, width, height| {
+                //TODO: use modern gsk path instead of cairo
                 let mut surface = window.imp().surface.borrow_mut();
                 let surface = surface.get_or_insert_with(|| window.create_surface(width, height));
 
