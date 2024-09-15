@@ -3,6 +3,7 @@ mod application;
 mod config;
 mod about;
 mod classify;
+mod indicator_button;
 mod symbol_item;
 mod window;
 
