@@ -382,7 +382,15 @@ impl HieroglyphicWindow {
 
     fn try_upload_data(&self, label: String, strokes: Vec<classify::Stroke>) {
         if SETTINGS.with(|s| !s.boolean("contribute-data")) {
-            tracing::debug!("User has not opted into contributing data; Skipping upload");
+            tracing::debug!("Skipping data upload: user has not opted into data contribution");
+            return;
+        }
+
+        // skip uploading the data if the user is on a metered network connection
+        // see https://gitlab.gnome.org/GNOME/Initiatives/-/issues/42
+        let network_monitor = gio::NetworkMonitor::default();
+        if network_monitor.is_network_metered() {
+            tracing::debug!("Skipping data upload: network is metered");
             return;
         }
 
