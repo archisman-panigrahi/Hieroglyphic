@@ -1,14 +1,20 @@
 use std::time::Instant;
 
+use adw::prelude::*;
 use gettextrs::gettext;
+use gtk::gdk;
 use gtk::subclass::prelude::*;
-use gtk::{gdk, prelude::*};
 use gtk::{gio, glib};
 use itertools::Itertools;
 
 use crate::application::HieroglyphicApplication;
-use crate::classify;
 use crate::symbol_item::SymbolItem;
+use crate::{classify, config};
+
+// GTK is single-threaded
+thread_local! {
+    static SETTINGS: gio::Settings = gio::Settings::new(config::APP_ID);
+}
 
 mod imp {
     use std::{
@@ -18,7 +24,7 @@ mod imp {
 
     use adw::subclass::application_window::AdwApplicationWindowImpl;
 
-    use crate::config;
+    use crate::{config, indicator_button::IndicatorButton};
 
     use super::*;
 
@@ -33,6 +39,8 @@ mod imp {
         pub symbol_list: TemplateChild<gtk::ListBox>,
         #[template_child]
         pub stack: TemplateChild<gtk::Stack>,
+        #[template_child]
+        pub indicator_button: TemplateChild<IndicatorButton>,
         pub toast: RefCell<Option<adw::Toast>>,
         pub surface: RefCell<Option<cairo::ImageSurface>>,
         pub symbols: OnceCell<gio::ListStore>,
@@ -51,8 +59,13 @@ mod imp {
             klass.bind_template();
             klass.bind_template_instance_callbacks();
 
-            klass.install_action("win.clear", None, move |win, _, _| {
-                win.clear();
+            klass.install_action("win.show-contribution-dialog", None, move |win, _, _| {
+                SETTINGS.with(|settings| {
+                    // only show nudge once, i.e. hide it after clicking the button
+                    settings
+                        .set_boolean("show-contribution-nudge", false)
+                        .expect("Failed to set `show-contribution-nudge`");
+                });
             });
         }
 
@@ -69,9 +82,23 @@ mod imp {
             // Devel Profile
             if config::PROFILE == "Devel" {
                 obj.add_css_class("devel");
+                SETTINGS.with(|settings| {
+                    settings
+                        .set_boolean("show-contribution-nudge", true)
+                        .expect("Failed to set `show-contribution-nudge`");
+                });
             }
 
             tracing::debug!("Loaded {} symbols", classify::SYMBOL_COUNT);
+
+            let settings = SETTINGS.with(|s| s.clone());
+            settings
+                .bind(
+                    "show-contribution-nudge",
+                    &*self.indicator_button,
+                    "show-indicator",
+                )
+                .build();
 
             obj.setup_symbol_list();
             obj.setup_drawing_area();

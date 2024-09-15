@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <schemalist>
     <schema path="/io.github.finefindus.Hieroglyphic/" id="@app-id@" gettext-domain="@gettext-package@">
+        <key name="show-contribution-nudge" type="b">
+            <default>true</default>
+            <summary>Whether to show a small nudge towards the contribution dialog</summary>
+        </key>
     </schema>
 </schemalist>
 
