@@ -60,12 +60,19 @@ mod imp {
             klass.bind_template_instance_callbacks();
 
             klass.install_action("win.show-contribution-dialog", None, move |win, _, _| {
+                let builder = gtk::Builder::from_resource(
+                    "/io/github/finefindus/Hieroglyphic/ui/contribution-dialog.ui",
+                );
+                let switch: adw::SwitchRow = builder.object("switch_row").unwrap();
                 SETTINGS.with(|settings| {
+                    settings.bind("contribute-data", &switch, "active").build();
                     // only show nudge once, i.e. hide it after clicking the button
                     settings
                         .set_boolean("show-contribution-nudge", false)
                         .expect("Failed to set `show-contribution-nudge`");
                 });
+                let dialog: adw::Dialog = builder.object("contribution_dialog").unwrap();
+                dialog.present(Some(win));
             });
         }
 
