@@ -1,5 +1,7 @@
 use std::ops::{Add, Mul, Sub};
 
+use serde::Serialize;
+
 // Original code from:
 // https://github.com/FineFindus/detexify-rust/blob/311002feb0519f483ef1f9cc8206648286128ff5/src/point.rs
 
@@ -12,7 +14,7 @@ pub(super) const ONE_POINT: Point = Point { x: 1.0, y: 1.0 };
 const DELTA: f64 = 1e-10;
 
 /// A simple point, consisting of a (x, y) coordinate.
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Serialize)]
 pub struct Point {
     /// The x-coordinate of the point.
     pub x: f64,

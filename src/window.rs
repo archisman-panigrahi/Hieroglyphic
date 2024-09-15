@@ -376,5 +376,32 @@ impl HieroglyphicWindow {
         self.clipboard().set_text(&command);
         tracing::debug!("Selected: {} ({})", &command, symbol.id());
         self.show_toast(gettext("Copied “{}”").replace("{}", &command));
+        let strokes = self.imp().strokes.borrow().clone();
+        self.try_upload_data(symbol.id(), strokes);
+    }
+
+    fn try_upload_data(&self, label: String, strokes: Vec<classify::Stroke>) {
+        if SETTINGS.with(|s| !s.boolean("contribute-data")) {
+            tracing::debug!("User has not opted into contributing data; Skipping upload");
+            return;
+        }
+
+        tracing::info!("Uploading strokes...");
+        // spawn a new thread to avoid blocking the UI thread while uploading
+        std::thread::spawn(move || {
+            match ureq::post(&format!(
+                "https://hieroglyphic.shuttleapp.rs/v1/upload/{}",
+                label
+            ))
+            .send_json(strokes)
+            {
+                Ok(_) => {
+                    tracing::info!("Sucesfully uploaded data");
+                }
+                Err(err) => {
+                    tracing::warn!("Failed to upload strokes: {}", err);
+                }
+            }
+        });
     }
 }

@@ -1,12 +1,13 @@
 use super::{point::Point, rect::Rect};
 use itertools::Itertools;
+use serde::Serialize;
 use std::collections::VecDeque;
 
 // Original code from:
 // https://github.com/FineFindus/detexify-rust/blob/311002feb0519f483ef1f9cc8206648286128ff5/src/stroke.rs
 
 /// A list of connectect [`Point`]s.
-#[derive(Clone, Debug, Default, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq, Serialize)]
 pub struct Stroke(Vec<Point>);
 
 impl Stroke {

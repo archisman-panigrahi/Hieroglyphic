@@ -7,8 +7,6 @@ description = """Search through over 1000 different LaTeX symbols by sketching""
 license = "GPL-3.0"
 repository = "https://github.com/FineFindus/tex-match/"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [profile.release.package."*"]
 opt-level = 3
 
@@ -33,6 +31,9 @@ async-channel = "2.2"
 tract-onnx = "0.21.6"
 base64 = "0.22.1"
 phf = "0.11"
+ureq = { version = "2.10.1", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 
 [build-dependencies]
 phf_codegen = "0.11"
