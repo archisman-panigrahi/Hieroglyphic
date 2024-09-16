@@ -46,7 +46,7 @@ impl Point {
         }
     }
 
-    /// Check if the given [`Point`] is withhin [`DELTA`] of self.
+    /// Check if the given [`Point`] is within [`DELTA`] of self.
     pub(super) fn approx_eq(&self, p: Point) -> bool {
         self.euclidean_distance(&p) < DELTA
     }

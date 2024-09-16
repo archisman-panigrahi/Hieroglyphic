@@ -29,17 +29,17 @@ impl Rect {
         }
     }
 
-    /// Rturns whether the Rect is ony a point.
+    /// Returns whether the Rect is only a point.
     pub(super) fn is_point(self) -> bool {
         self.lower_left == self.upper_right
     }
 
-    /// Rturns the width of the rect.
+    /// Returns the width of the rect.
     pub(super) fn width(self) -> f64 {
         self.upper_right.x - self.lower_left.x
     }
 
-    /// Rturns the height of the rect.
+    /// Returns the height of the rect.
     pub(super) fn height(self) -> f64 {
         self.upper_right.y - self.lower_left.y
     }

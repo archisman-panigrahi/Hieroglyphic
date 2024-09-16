@@ -3,7 +3,7 @@
 ![Hieroglyphic](data/icons/io.github.finefindus.Hieroglyphic.svg)
 
 If you work with LaTeX, you know it's difficult to memorize the names of all the symbols. Hieroglyphic allows you to search through over 1000 different LaTeX symbols by sketching. Once you found the desired symbol you can copy it to the clipboard by clicking on the entry.
-Hieroglyphic is powered by a machine learning model, trained on a modfied version of the [detexify data](https://github.com/kirel/detexify-data).
+Hieroglyphic is powered by a machine learning model, trained on a modified version of the [detexify data](https://github.com/kirel/detexify-data).
 
 
 

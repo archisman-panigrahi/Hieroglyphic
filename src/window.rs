@@ -413,7 +413,7 @@ impl HieroglyphicWindow {
             .send_json(strokes)
             {
                 Ok(_) => {
-                    tracing::info!("Sucesfully uploaded data");
+                    tracing::info!("Successfully uploaded data");
                 }
                 Err(err) => {
                     tracing::warn!("Failed to upload strokes: {}", err);

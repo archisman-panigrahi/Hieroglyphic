@@ -7,7 +7,7 @@
         </key>
         <key name="contribute-data" type="b">
             <default>false</default>
-            <summary>Whether to constribute recognized strokes</summary>
+            <summary>Whether to contribute recognized strokes</summary>
         </key>
     </schema>
 </schemalist>

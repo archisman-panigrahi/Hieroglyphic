@@ -10,7 +10,7 @@ from pathlib import Path
 
 # Training the model
 #
-# 1. Run this file. It will generate the traning images,
+# 1. Run this file. It will generate the training images,
 #    split them into train, val and test sets and combine
 #    them into a tar file.
 #
@@ -73,7 +73,7 @@ for label, strokes_list in symbol_to_stroke_samples.items():
 print(f"Created {created_counter} images")
 
 
-# split data into trainig data
+# split data into training data
 print("Splitting data")
 
 os.makedirs(f"images_data{SIZE}/train", exist_ok = True)
