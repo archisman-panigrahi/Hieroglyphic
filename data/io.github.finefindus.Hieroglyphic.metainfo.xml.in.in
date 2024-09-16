@@ -39,6 +39,18 @@
   <content_rating type="oars-1.1" />
 
   <releases>
+    <release version="2.0.0" date="2024-09-16">
+      <description>
+        <p>This update brings significant improvements to the classification system:</p>
+        <ul>
+          <li>Powered by a new machine learning model</li>
+          <li>Faster classification speed</li>
+          <li>Reduced application size</li>
+          <li>Improved overall accuracy</li>
+          <li>Option to contribute recognized symbols to improve future model performance</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.1.0" date="2024-04-24">
       <description>
         <p>This update refines the user interface:</p>
