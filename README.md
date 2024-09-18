@@ -44,9 +44,8 @@ This project uses [conventional commits](https://www.conventionalcommits.org/).
 
 ### Translation
 
-Translations are a great way to contribute. This project uses the [GNU gettext](https://www.gnu.org/software/gettext/manual/html_node/index.html#SEC_Contents) for translations. If you want to learn more, visit the [translator section](https://www.gnu.org/software/gettext/manual/html_node/Translators.html#Translators).
-
-After finishing the translations, add the translated language code into the [LINGUAS](po/LINGUAS) file. Then follow the above steps to create a pull request.
+Translations are a great way to contribute. Hieroglyphic is translated on the GNOME translation platform [Damned Lies](https://l10n.gnome.org/module/hieroglyphic). 
+If you want to learn more, visit the [GNOME Translation Project Wiki](https://wiki.gnome.org/TranslationProject).
 
 ## Building
 
