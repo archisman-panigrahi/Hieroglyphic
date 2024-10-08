@@ -21,6 +21,14 @@ jobs:
         run: cargo fmt --all -- --check
 
   flatpak:
+    name: Lint Flatpak Manifest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          docker run -v $(pwd):/mnt --rm -it ghcr.io/flathub/flatpak-builder-lint:latest manifest /mnt/build-aux/io.github.finefindus.Hieroglyphic.json
+
+  flatpak:
     name: Flatpak
     runs-on: ubuntu-latest
     container:
