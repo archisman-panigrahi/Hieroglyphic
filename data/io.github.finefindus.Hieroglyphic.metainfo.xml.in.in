@@ -39,7 +39,7 @@
   <content_rating type="oars-1.1" />
 
   <releases>
-    <release version="2.0.0" date="2024-09-16">
+    <release version="2.0.0" date="2024-10-08">
       <description>
         <p>This update brings significant improvements to the classification system:</p>
         <ul>
