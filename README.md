@@ -2,7 +2,8 @@
 
 ![Hieroglyphic](data/icons/io.github.finefindus.Hieroglyphic.svg)
 
-If you work with LaTeX, you know it's difficult to memorize the names of all the symbols. Hieroglyphic allows you to search through over 1000 different LaTeX symbols by sketching. Once you found the desired symbol you can copy it to the clipboard by clicking on the entry. Hieroglyphic is based of [detexify](https://detexify.kirelabs.org/classify.html) and is powered by a port of the [detexify classifier](https://github.com/zoeyfyi/detexify-rust).
+If you work with LaTeX, you know it's difficult to memorize the names of all the symbols. Hieroglyphic allows you to search through over 1000 different LaTeX symbols by sketching. Once you found the desired symbol you can copy it to the clipboard by clicking on the entry.
+Hieroglyphic is powered by a machine learning model, trained on a modified version of the [detexify data](https://github.com/kirel/detexify-data).
 
 
 
@@ -17,13 +18,13 @@ If you work with LaTeX, you know it's difficult to memorize the names of all the
 
 # Features
 
-- Over 1000 LaTeX symbols across multiple packages (same set as detexify) 
+- Over 1000 LaTeX symbols across multiple packages (same set as detexify)
 - Completely offline
+- Opt into contributing recognized symbols to improve the classification
 
 ## Installation
 
-### Flatpak
-<a href='https://flathub.org/apps/details/io.github.finefindus.Hieroglyphic'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-i-en.png'/></a>
+<a href='https://flathub.org/apps/details/io.github.finefindus.Hieroglyphic'><img width='240' alt='Download on Flathub' src='https://flathub.org/api/badge?locale=en&light'/></a>
 
 Other installation methods:
 
@@ -43,13 +44,12 @@ To contribute:
 4. Push to the Branch (`git push origin feat/AmazingFeature`)
 5. Open a Pull Request
 
-This project uses [conventional commits](https://www.conventionalcommits.org/)
+This project uses [conventional commits](https://www.conventionalcommits.org/).
 
 ### Translation
 
-Translations are a great way to contribute. This project uses the [GNU gettext](https://www.gnu.org/software/gettext/manual/html_node/index.html#SEC_Contents) for translations. If you want to learn more, visit the [translator section](https://www.gnu.org/software/gettext/manual/html_node/Translators.html#Translators).
-
-After finishing the translations, add the translated language code into the [LINGUAS](po/LINGUAS) file. Then follow the above steps to create a pull request.
+Translations are a great way to contribute. Hieroglyphic is translated on the GNOME translation platform [Damned Lies](https://l10n.gnome.org/module/hieroglyphic). 
+If you want to learn more, visit the [GNOME Translation Project Wiki](https://wiki.gnome.org/TranslationProject).
 
 ## Building
 
@@ -60,3 +60,5 @@ See this [general guide](https://wiki.gnome.org/Newcomers/BuildProject) for buil
 A huge thanks to all the libraries used and all the FOSS apps for inspiration. Special thanks to
 
 - [TeX Match](https://github.com/zoeyfyi/TeX-Match) from which this was forked
+- [detexify](https://detexify.kirelabs.org/classify.html)
+- [detexify classifier](https://github.com/zoeyfyi/detexify-rust) a port of the original detexify

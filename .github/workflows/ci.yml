@@ -20,6 +20,14 @@ jobs:
       - name: Run cargo fmt
         run: cargo fmt --all -- --check
 
+  flatpak-manifest-lint:
+    name: Lint Flatpak Manifest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          docker run -v $(pwd):/mnt --rm -t ghcr.io/flathub/flatpak-builder-lint:latest manifest /mnt/build-aux/io.github.finefindus.Hieroglyphic.json
+
   flatpak:
     name: Flatpak
     runs-on: ubuntu-latest
@@ -31,7 +39,7 @@ jobs:
       - name: Add Flathub Beta remote
         run: |
           flatpak --user remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
-          # flatpak install --user -y flathub-beta org.freedesktop.Sdk.Extension.rust-stable//23.08beta org.freedesktop.Sdk.Extension.llvm16//23.08beta
+          flatpak install --user -y flathub-beta org.freedesktop.Sdk.Extension.rust-stable//24.08beta org.freedesktop.Sdk.Extension.llvm18//24.08beta
       - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v6
         with:
           bundle: Hieroglyphic.flatpak

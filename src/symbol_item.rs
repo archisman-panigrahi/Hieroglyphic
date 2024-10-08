@@ -2,6 +2,8 @@ use glib::Object;
 use gtk::subclass::prelude::*;
 use gtk::{glib, prelude::ObjectExt};
 
+use crate::classify;
+
 mod imp {
 
     use std::cell::RefCell;
@@ -63,10 +65,14 @@ glib::wrapper! {
 
 #[gtk::template_callbacks]
 impl SymbolItem {
-    pub fn new(symbol: detexify::Symbol) -> Self {
+    pub fn new(symbol: classify::Symbol) -> Self {
         Object::builder()
             .property("id", symbol.id())
-            .property("icon", &format!("{}-symbolic", symbol.id()))
+            .property(
+                "icon",
+                // icon file names do not contain ending '='
+                &format!("{}-symbolic", symbol.id().trim_end_matches('=')),
+            )
             .property("command", symbol.command)
             .property("package", symbol.package)
             .property(
@@ -75,7 +81,10 @@ impl SymbolItem {
                     (true, true) => "mathmode & textmode",
                     (false, true) => "textmode",
                     (true, false) => "mathmode",
-                    (false, false) => "",
+                    (false, false) => {
+                        // a symbol has to be either math mode or textmode
+                        unreachable!("Symbol {} is neither math nor textmode", symbol.id())
+                    }
                 },
             )
             .build()

@@ -1,13 +1,20 @@
 use std::time::Instant;
 
+use adw::prelude::*;
 use gettextrs::gettext;
+use gtk::gdk;
+use gtk::glib;
 use gtk::subclass::prelude::*;
-use gtk::{gdk, prelude::*};
-use gtk::{gio, glib};
 use itertools::Itertools;
 
 use crate::application::HieroglyphicApplication;
 use crate::symbol_item::SymbolItem;
+use crate::{classify, config};
+
+// GTK is single-threaded
+thread_local! {
+    static SETTINGS: gio::Settings = gio::Settings::new(config::APP_ID);
+}
 
 mod imp {
     use std::{
@@ -17,7 +24,7 @@ mod imp {
 
     use adw::subclass::application_window::AdwApplicationWindowImpl;
 
-    use crate::config;
+    use crate::{config, indicator_button::IndicatorButton};
 
     use super::*;
 
@@ -32,12 +39,14 @@ mod imp {
         pub symbol_list: TemplateChild<gtk::ListBox>,
         #[template_child]
         pub stack: TemplateChild<gtk::Stack>,
+        #[template_child]
+        pub indicator_button: TemplateChild<IndicatorButton>,
         pub toast: RefCell<Option<adw::Toast>>,
         pub surface: RefCell<Option<cairo::ImageSurface>>,
         pub symbols: OnceCell<gio::ListStore>,
-        pub strokes: RefCell<Vec<detexify::Stroke>>,
-        pub current_stroke: RefCell<detexify::Stroke>,
-        pub sender: OnceCell<Sender<Vec<detexify::Stroke>>>,
+        pub strokes: RefCell<Vec<classify::Stroke>>,
+        pub current_stroke: RefCell<classify::Stroke>,
+        pub sender: OnceCell<Sender<Vec<classify::Stroke>>>,
     }
 
     #[glib::object_subclass]
@@ -50,8 +59,20 @@ mod imp {
             klass.bind_template();
             klass.bind_template_instance_callbacks();
 
-            klass.install_action("win.clear", None, move |win, _, _| {
-                win.clear();
+            klass.install_action("win.show-contribution-dialog", None, move |win, _, _| {
+                let builder = gtk::Builder::from_resource(
+                    "/io/github/finefindus/Hieroglyphic/ui/contribution-dialog.ui",
+                );
+                let switch: adw::SwitchRow = builder.object("switch_row").unwrap();
+                SETTINGS.with(|settings| {
+                    settings.bind("contribute-data", &switch, "active").build();
+                    // only show nudge once, i.e. hide it after clicking the button
+                    settings
+                        .set_boolean("show-contribution-nudge", false)
+                        .expect("Failed to set `show-contribution-nudge`");
+                });
+                let dialog: adw::Dialog = builder.object("contribution_dialog").unwrap();
+                dialog.present(Some(win));
             });
         }
 
@@ -68,9 +89,23 @@ mod imp {
             // Devel Profile
             if config::PROFILE == "Devel" {
                 obj.add_css_class("devel");
+                SETTINGS.with(|settings| {
+                    settings
+                        .set_boolean("show-contribution-nudge", true)
+                        .expect("Failed to set `show-contribution-nudge`");
+                });
             }
 
-            tracing::debug!("Loaded {} symbols", detexify::iter_symbols().count());
+            tracing::debug!("Loaded {} symbols", classify::SYMBOL_COUNT);
+
+            let settings = SETTINGS.with(|s| s.clone());
+            settings
+                .bind(
+                    "show-contribution-nudge",
+                    &*self.indicator_button,
+                    "show-indicator",
+                )
+                .build();
 
             obj.setup_symbol_list();
             obj.setup_drawing_area();
@@ -129,14 +164,18 @@ impl HieroglyphicWindow {
             .expect("Failed to set symbol model");
 
         let selection_model = gtk::NoSelection::new(Some(model));
-        self.imp().symbol_list.bind_model(
-            Some(&selection_model),
-            glib::clone!(@weak self as window => @default-panic, move |obj| {
-                let symbol_object = obj.downcast_ref::<gtk::StringObject>().expect("Object should be of type `StringObject`");
-                let symbol_item = SymbolItem::new(detexify::Symbol::from_id(symbol_object.string().as_str()).expect("`symbol_object` should be a valid symbol id"));
+        self.imp()
+            .symbol_list
+            .bind_model(Some(&selection_model), move |obj| {
+                let symbol_object = obj
+                    .downcast_ref::<gtk::StringObject>()
+                    .expect("Object should be of type `StringObject`");
+                let symbol_item = SymbolItem::new(
+                    classify::Symbol::from_id(&symbol_object.string())
+                        .expect("`symbol_object` should be a valid symbol id"),
+                );
                 symbol_item.upcast()
-            }),
-        );
+            });
     }
 
     fn setup_classifier(&self) {
@@ -145,7 +184,7 @@ impl HieroglyphicWindow {
         self.imp().sender.set(req_tx).expect("Failed to set tx");
         gio::spawn_blocking(move || {
             tracing::info!("Classifier thread started");
-            let classifier = detexify::Classifier::default();
+            let classifier = classify::Classifier::new().expect("Failed to setup classifier");
 
             loop {
                 let Some(strokes) = req_rx.iter().next() else {
@@ -154,14 +193,14 @@ impl HieroglyphicWindow {
                     return;
                 };
 
-                let classifications: Option<Vec<detexify::Score>> = 'classify: {
-                    let Some(sample) = detexify::StrokeSample::new(strokes) else {
-                        tracing::warn!("Skipping classification on empty strokes");
-                        break 'classify None;
-                    };
+                if strokes.is_empty() {
+                    tracing::warn!("Skipping classification on empty strokes");
+                    continue;
+                }
 
+                let classifications: Option<Vec<&'static str>> = 'classify: {
                     let start = Instant::now();
-                    let Some(results) = classifier.classify(sample) else {
+                    let Some(results) = classifier.classify(strokes) else {
                         tracing::warn!("Classifier returned None");
                         break 'classify None;
                     };
@@ -178,20 +217,32 @@ impl HieroglyphicWindow {
             }
         });
 
-        glib::spawn_future_local(glib::clone!(@weak self as window => async move {
-            tracing::debug!("Listening for classifications");
-            while let Ok(Some(classifications)) = res_rx.recv().await {
-                window.imp().stack.set_visible_child_name("symbols");
-                let symbols = window.symbols();
-                symbols.remove_all();
+        glib::spawn_future_local(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            async move {
+                tracing::debug!("Listening for classifications");
+                while let Ok(Some(classifications)) = res_rx.recv().await {
+                    window.imp().stack.set_visible_child_name("symbols");
+                    let symbols = window.symbols();
+                    symbols.remove_all();
 
-                // switching out all 1k symbols takes too long, so only display the first 25
-                // TODO: find faster ways and display all
-                for symbol in classifications.iter().take(25) {
-                    symbols.append(&gtk::StringObject::new(&symbol.id))
+                    // switching out all 1k symbols takes too long, so only display the first 25
+                    // TODO: find faster ways and display all
+                    for symbol in classifications.iter().take(25) {
+                        symbols.append(&gtk::StringObject::new(symbol))
+                    }
+                    // scroll to top after updating symbols, so that the most likely symbols are
+                    // visible first
+                    window
+                        .imp()
+                        .symbol_list
+                        .adjustment()
+                        .expect("Failed to get symbol list adjustment")
+                        .set_value(0.0);
                 }
             }
-        }));
+        ));
     }
 
     fn classify(&self) {
@@ -221,18 +272,28 @@ impl HieroglyphicWindow {
     }
 
     fn setup_drawing_area(&self) {
-        self.imp().drawing_area.set_draw_func(
-            glib::clone!(@weak self as window => move |_area: &gtk::DrawingArea, ctx: &cairo::Context, width, height| {
+        self.imp().drawing_area.set_draw_func(glib::clone!(
+            #[weak(rename_to = window)]
+            self,
+            move |_area: &gtk::DrawingArea, ctx: &cairo::Context, width, height| {
+                //TODO: use modern gsk path instead of cairo
                 let mut surface = window.imp().surface.borrow_mut();
                 let surface = surface.get_or_insert_with(|| window.create_surface(width, height));
 
-                ctx.set_source_surface(surface, 0.0, 0.0).expect("Failed to set surface");
+                ctx.set_source_surface(surface, 0.0, 0.0)
+                    .expect("Failed to set surface");
                 ctx.set_source_color(&window.line_color());
                 ctx.set_line_width(3.0);
                 ctx.set_line_cap(cairo::LineCap::Round);
 
                 let curr_stroke = window.imp().current_stroke.borrow().clone();
-                for stroke in window.imp().strokes.borrow().iter().chain(std::iter::once(&curr_stroke)) {
+                for stroke in window
+                    .imp()
+                    .strokes
+                    .borrow()
+                    .iter()
+                    .chain(std::iter::once(&curr_stroke))
+                {
                     tracing::trace!("Drawing: {:?}", stroke);
                     let mut looped = false;
                     for (p, q) in stroke.points().tuple_windows() {
@@ -276,7 +337,7 @@ impl HieroglyphicWindow {
         self.imp()
             .current_stroke
             .borrow_mut()
-            .add_point(detexify::Point { x, y });
+            .add_point(classify::Point { x, y });
         self.imp().drawing_area.queue_draw();
     }
 
@@ -285,11 +346,11 @@ impl HieroglyphicWindow {
         tracing::trace!("Drag update at {},{}", x, y);
         let mut stroke = self.imp().current_stroke.borrow_mut();
         //x,y refers to movements relative to start coord
-        let &detexify::Point {
+        let &classify::Point {
             x: prev_x,
             y: prev_y,
         } = stroke.points().next().unwrap();
-        stroke.add_point(detexify::Point {
+        stroke.add_point(classify::Point {
             x: prev_x + x,
             y: prev_y + y,
         });
@@ -315,5 +376,49 @@ impl HieroglyphicWindow {
         self.clipboard().set_text(&command);
         tracing::debug!("Selected: {} ({})", &command, symbol.id());
         self.show_toast(gettext("Copied “{}”").replace("{}", &command));
+        let strokes = self.imp().strokes.borrow().clone();
+        self.try_upload_data(symbol.id(), strokes);
+    }
+
+    fn try_upload_data(&self, label: String, strokes: Vec<classify::Stroke>) {
+        // skip uploads always on debug mode, to avoid accidental uploads
+        if SETTINGS.with(|s| !s.boolean("contribute-data")) || config::PROFILE == "Devel" {
+            tracing::debug!("Skipping data upload: user has not opted into data contribution");
+            return;
+        }
+
+        // skip uploading the data if the user is on a metered network connection
+        // see https://gitlab.gnome.org/GNOME/Initiatives/-/issues/42
+        let network_monitor = gio::NetworkMonitor::default();
+        if network_monitor.is_network_metered() {
+            tracing::debug!("Skipping data upload: network is metered");
+            return;
+        }
+
+        // skip uploading data whilst the user has power saving enabled
+        // see https://gitlab.gnome.org/GNOME/Initiatives/-/issues/43
+        let power_monitor = gio::PowerProfileMonitor::get_default();
+        if power_monitor.is_power_saver_enabled() {
+            tracing::debug!("Skipping data upload: power saver is active");
+            return;
+        }
+
+        tracing::info!("Uploading strokes...");
+        // spawn a new thread to avoid blocking the UI thread while uploading
+        std::thread::spawn(move || {
+            match ureq::post(&format!(
+                "https://hieroglyphic.shuttleapp.rs/v1/upload/{}",
+                label
+            ))
+            .send_json(strokes)
+            {
+                Ok(_) => {
+                    tracing::info!("Successfully uploaded data");
+                }
+                Err(err) => {
+                    tracing::warn!("Failed to upload strokes: {}", err);
+                }
+            }
+        });
     }
 }

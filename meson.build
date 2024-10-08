@@ -1,7 +1,7 @@
 project(
   'hieroglyphic',
   'rust',
-  version: '1.1.0',
+  version: '2.0.0',
   meson_version: '>= 0.59',
 )
 
@@ -11,7 +11,7 @@ gnome = import('gnome')
 base_id = 'io.github.finefindus.Hieroglyphic'
 
 dependency('glib-2.0', version: '>= 2.66')
-dependency('gio-2.0', version: '>= 2.66')
+dependency('gio-2.0', version: '>= 2.70')
 dependency('gtk4', version: '>= 4.0.0')
 
 find_program('glib-compile-resources', required: true)
