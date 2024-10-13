@@ -1,16 +1,15 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Bulgarian translation of hieroglyphic po-file.
+# Copyright (C) 2024 twlvnn kraftwerk
 # This file is distributed under the same license as the hieroglyphic package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# twlvnn <kraft_werk@tutanota.com>, 2024.
+# twlvnn kraftwerk <kraft_werk@tutanota.com>, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: hieroglyphic\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-12 21:20+0200\n"
-"PO-Revision-Date: 2024-04-27 11:56+0200\n"
-"Last-Translator: twlvnn <kraft_werk@tutanota.com>\n"
+"Report-Msgid-Bugs-To: https://github.com/FineFindus/Hieroglyphic/issues\n"
+"POT-Creation-Date: 2024-10-13 03:26+0000\n"
+"PO-Revision-Date: 2024-10-13 16:17+0200\n"
+"Last-Translator: twlvnn kraftwerk <kraft_werk@tutanota.com>\n"
 "Language-Team: Bulgarian <dict-notifications@fsa-bg.org>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
@@ -21,28 +20,32 @@ msgstr ""
 
 #: data/io.github.finefindus.Hieroglyphic.desktop.in.in:3
 #: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:8 src/about.rs:20
-#: src/main.rs:23
+#: src/main.rs:25
 msgid "Hieroglyphic"
-msgstr "Йероглифен"
+msgstr "Йероглиф"
 
 #: data/io.github.finefindus.Hieroglyphic.desktop.in.in:4
 msgid "Search through over 1000 different LaTeX symbols by sketching"
-msgstr "Търсете в над 1000 различни „LaTeX“ знака чрез скициране"
+msgstr "Търсете в над 1000 различни знака на „LaTeX“ като ги изчертаете"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/io.github.finefindus.Hieroglyphic.desktop.in.in:10
 msgid "GTK;Tools;LaTeX;TeX;Symbols;"
-msgstr "инструменти;знаци;"
+msgstr ""
+"гтк;инструменти;знаци;символи;тех;текс;латех;латекс;gtk;tools;latex;tex;"
+"symbols;"
+
+#: data/io.github.finefindus.Hieroglyphic.gschema.xml.in:6
+msgid "Whether to show a small nudge towards the contribution dialog"
+msgstr "Дали да се подканя към прозорчето за допринасяне"
+
+#: data/io.github.finefindus.Hieroglyphic.gschema.xml.in:10
+msgid "Whether to contribute recognized strokes"
+msgstr "Дали да се допринася с разпознатите знаци"
 
 #: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:9
 msgid "Find LaTeX symbols"
-msgstr "Намерете „LaTeX“ знаци"
-
-#. developer_name tag deprecated with Appstream 1.0
-#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:11
-#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:13
-msgid "FineFindus"
-msgstr "FineFindus"
+msgstr "Търсене на знаци в „LaTeX“"
 
 #: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:18
 msgid ""
@@ -51,74 +54,97 @@ msgid ""
 "LaTeX symbols by sketching."
 msgstr ""
 "Ако работите с „LaTeX“, знаете, че е трудно да се запомнят имената на всички "
-"знаци. „Йероглифен“ ви позволява да търсите в над 1000 различни знака на "
-"„LaTeX“ чрез скициране."
+"знаци. „Йероглиф“ ви позволява да търсите в над 1000 различни знака на "
+"„LaTeX“ чрез изчертаване."
 
 #: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:24
-#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:32
 msgid "Main Window"
 msgstr "Основен прозорец"
 
 #: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:28
-#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:36
 msgid "Placeholder"
 msgstr "Заместител"
 
-#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:52
-msgid "This update refines the user interface:"
-msgstr "Това обновление усъвършенства потребителския интерфейс:"
+#: data/resources/ui/contribution-dialog.ui:6
+#: data/resources/ui/contribution-dialog.ui:39 data/resources/ui/window.ui:24
+msgid "Improve Hieroglyphic"
+msgstr "Допринасяне към „Йероглиф“"
 
-#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:54
-msgid "New icon"
-msgstr "Нова иконка"
+#: data/resources/ui/contribution-dialog.ui:50
+msgid "Help make Hieroglyphic better at identifying symbols for everyone"
+msgstr "Помогнете ни да подобрим разпознаването на знаци от „Йероглиф“"
 
-#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:55
-msgid "Updated to the latest GNOME components"
-msgstr "Обновен до най-новите компоненти на „GNOME“"
+#: data/resources/ui/contribution-dialog.ui:61
+msgid "Contribute Symbols"
+msgstr "Допринасяне със знаци"
 
-#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:56
-msgid "Improved recognition speed and overall application responsiveness"
-msgstr ""
-"Подобрена скорост на разпознаване и цялостна съвместимост на потребителския "
-"интерфейс за малки и големи екрани"
+#: data/resources/ui/contribution-dialog.ui:62
+msgid "Submit recognized drawings to Hieroglyphic’s dataset"
+msgstr "Подайте разпознати рисунки към базата от данни на „Йероглиф“"
 
-#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:57
-msgid "Shortcut to quickly delete the drawn symbol"
-msgstr "Клавишна комбинация за бързо премахване на нарисувания знак"
-
-#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:58
-msgid "Various minor UI improvements and tweaks"
-msgstr "Различни дребни подобрения на потребителския интерфейс"
-
-#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:64
-msgid "Fixed failing appstream metadata"
-msgstr "Поправени са „AppStream“ метаданните"
-
-#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:69
-msgid "Initial release"
-msgstr "Първоначално издание"
-
-#: data/resources/ui/window.ui:29
+#: data/resources/ui/window.ui:36
 msgid "About Hieroglyphic"
-msgstr "Относно „Йероглифен“"
+msgstr "Относно „Йероглиф“"
 
-#: data/resources/ui/window.ui:43
+#: data/resources/ui/window.ui:50
 msgid "No Symbols"
 msgstr "Няма знаци"
 
-#: data/resources/ui/window.ui:44
+#: data/resources/ui/window.ui:51
 msgid "Start by drawing a symbol"
 msgstr "Започнете, като нарисувате знак"
 
-#: data/resources/ui/window.ui:111
+#: data/resources/ui/window.ui:118
 msgid "_Clear"
 msgstr "_Изчистване"
 
 #. Translators: This should not be translate, Please enter your credits here instead (format: "Name https://example.com" or "Name <email@example.com>", no quotes)
 #: src/about.rs:26
 msgid "translator-credits"
-msgstr "twlvnn <kraft_werk@tutanota.com>"
+msgstr ""
+"Twlvnn Kraftwerk &lt;<a href='mailto:kraft_werk@tutanota."
+"com'>kraft_werk@tutanota.com</a>&gt;\n"
+"\n"
+"\n"
+"Проектът за превод на GNOME има нужда от подкрепа.\n"
+"Научете повече за нас на <a href='https://fsa-bg.org/project/gtp'>уеб сайта</"
+"a> ни.\n"
+"Докладвайте за грешки в превода в <a href='https://fsa-bg.org/project/gtp/"
+"newticket'>съответния раздел</a>."
 
-#: src/window.rs:317
+#: src/window.rs:378
 msgid "Copied “{}”"
 msgstr "„{}“ е копирано"
+
+#~ msgid ""
+#~ "Help improve Hieroglyphic by automatically contributing recognized symbols"
+#~ msgstr "Допринасяне към „Йероглиф“ като разпознатите знаци се споделят"
+
+#~ msgid "FineFindus"
+#~ msgstr "FineFindus"
+
+#~ msgid "This update refines the user interface:"
+#~ msgstr "Това обновление усъвършенства потребителския интерфейс:"
+
+#~ msgid "New icon"
+#~ msgstr "Нова иконка"
+
+#~ msgid "Updated to the latest GNOME components"
+#~ msgstr "Обновен до най-новите компоненти на „GNOME“"
+
+#~ msgid "Improved recognition speed and overall application responsiveness"
+#~ msgstr ""
+#~ "Подобрена скорост на разпознаване и цялостна съвместимост на "
+#~ "потребителския интерфейс за малки и големи екрани"
+
+#~ msgid "Shortcut to quickly delete the drawn symbol"
+#~ msgstr "Клавишна комбинация за бързо премахване на нарисувания знак"
+
+#~ msgid "Various minor UI improvements and tweaks"
+#~ msgstr "Различни дребни подобрения на потребителския интерфейс"
+
+#~ msgid "Fixed failing appstream metadata"
+#~ msgstr "Поправени са „AppStream“ метаданните"
+
+#~ msgid "Initial release"
+#~ msgstr "Първоначално издание"
