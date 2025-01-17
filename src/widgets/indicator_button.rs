@@ -41,13 +41,15 @@ mod imp {
     impl WidgetImpl for IndicatorButton {
         fn snapshot(&self, snapshot: &gtk::Snapshot) {
             self.parent_snapshot(snapshot);
-            if self.obj().show_indicator() {
-                let color = adw::StyleManager::default().accent_color_rgba();
-                let rect = gtk::graphene::Rect::new(14.0, 15.0, 8.0, 8.0);
-                snapshot.push_rounded_clip(&gtk::gsk::RoundedRect::from_rect(rect, 100.0));
-                snapshot.append_color(&color, &rect);
-                snapshot.pop();
+            if !self.obj().show_indicator() {
+                return;
             }
+
+            let color = adw::StyleManager::default().accent_color_rgba();
+            let rect = gtk::graphene::Rect::new(14.0, 15.0, 8.0, 8.0);
+            snapshot.push_rounded_clip(&gtk::gsk::RoundedRect::from_rect(rect, 100.0));
+            snapshot.append_color(&color, &rect);
+            snapshot.pop();
         }
     }
 
