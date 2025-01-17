@@ -8,7 +8,7 @@ use gtk::subclass::prelude::*;
 use itertools::Itertools;
 
 use crate::application::HieroglyphicApplication;
-use crate::symbol_item::SymbolItem;
+use crate::widgets::SymbolItem;
 use crate::{classify, config};
 
 // GTK is single-threaded
@@ -24,7 +24,7 @@ mod imp {
 
     use adw::subclass::application_window::AdwApplicationWindowImpl;
 
-    use crate::{config, indicator_button::IndicatorButton};
+    use crate::{config, widgets::IndicatorButton};
 
     use super::*;
 

@@ -5,8 +5,8 @@ use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::{gdk, gio, glib};
 
-use crate::about;
 use crate::config::{self};
+use crate::widgets::about;
 use crate::window::HieroglyphicWindow;
 
 mod imp {
