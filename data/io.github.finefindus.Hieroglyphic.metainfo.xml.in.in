@@ -86,6 +86,26 @@
   <translation type="gettext">@gettext-package@</translation>
   <launchable type="desktop-id">@app-id@.desktop</launchable>
 
+  <provides>
+    <binary>hieroglyphic</binary>
+  </provides>
+
+  <supports>
+    <!-- works without internet, but cannot upload stroke data-->
+    <internet>offline-only</internet>
+  </supports>
+
+  <recommends>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <control>touch</control>
+    <control>tablet</control>
+  </recommends>
+
+  <requires>
+    <display_length compare="ge">700</display_length>
+  </requires>
+
   <custom>
     <value key="GnomeSoftware::key-colors">[(126, 224, 180)]</value>
   </custom>
