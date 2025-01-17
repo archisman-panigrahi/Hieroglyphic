@@ -144,7 +144,7 @@ impl HieroglyphicWindow {
         if let Some(prev_toast) = self.imp().toast.replace(Some(toast.clone())) {
             prev_toast.dismiss();
         }
-        self.imp().toast_overlay.add_toast(toast.clone());
+        self.imp().toast_overlay.add_toast(toast);
     }
 
     /// Returns the symbols list store object.
@@ -372,10 +372,12 @@ impl HieroglyphicWindow {
         let Some(symbol) = binding.and_downcast_ref::<SymbolItem>() else {
             return;
         };
+
         let command = symbol.command();
         self.clipboard().set_text(&command);
         tracing::debug!("Selected: {} ({})", &command, symbol.id());
         self.show_toast(gettext("Copied “{}”").replace("{}", &command));
+
         let strokes = self.imp().strokes.borrow().clone();
         self.try_upload_data(symbol.id(), strokes);
     }

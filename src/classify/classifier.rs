@@ -127,7 +127,7 @@ fn top_k_indices(arr: &[f32], k: usize) -> Vec<usize> {
     indices.into_iter().take(k).collect()
 }
 
-const LABELS: [&str; 1072] = [
+static LABELS: [&str; 1072] = [
     "Y21sbC1PVDEtX3BhcnI=",
     "Y21sbC1PVDEtX3dpdGg=",
     "YW1zbWF0aC1PVDEtX2RvdHNi",

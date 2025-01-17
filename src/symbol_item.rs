@@ -71,7 +71,7 @@ impl SymbolItem {
             .property(
                 "icon",
                 // icon file names do not contain ending '='
-                &format!("{}-symbolic", symbol.id().trim_end_matches('=')),
+                format!("{}-symbolic", symbol.id().trim_end_matches('=')),
             )
             .property("command", symbol.command)
             .property("package", symbol.package)
