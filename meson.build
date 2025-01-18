@@ -10,9 +10,10 @@ gnome = import('gnome')
 
 base_id = 'io.github.finefindus.Hieroglyphic'
 
-dependency('glib-2.0', version: '>= 2.66')
+dependency('glib-2.0', version: '>= 2.70')
 dependency('gio-2.0', version: '>= 2.70')
-dependency('gtk4', version: '>= 4.0.0')
+dependency('gtk4', version: '>= 4.14.0')
+dependency('libadwaita-1', version: '>= 1.6')
 
 find_program('glib-compile-resources', required: true)
 glib_compile_schemas = find_program('glib-compile-schemas', required: true)
@@ -49,7 +50,9 @@ endif
 
 meson.add_dist_script(
   'build-aux/dist-vendor.sh',
-  meson.project_build_root() / 'meson-dist' / meson.project_name() + '-' + version,
+  meson.project_build_root() / 'meson-dist' / meson.project_name()
+  + '-'
+  + version,
   meson.project_source_root(),
 )
 
@@ -58,8 +61,7 @@ if get_option('profile') == 'development'
   message('Setting up git pre-commit hook..')
   run_command(
     'cp',
-    '-f',
-    'hooks/pre-commit.hook',
+    '-f', 'hooks/pre-commit.hook',
     '.git/hooks/pre-commit',
     check: false,
   )
