@@ -2,13 +2,11 @@ use std::time::Instant;
 
 use adw::prelude::*;
 use gettextrs::gettext;
-use gtk::gdk;
 use gtk::glib;
 use gtk::subclass::prelude::*;
-use itertools::Itertools;
 
 use crate::application::HieroglyphicApplication;
-use crate::widgets::SymbolItem;
+use crate::widgets::{BoxedStrokes, SymbolItem};
 use crate::{classify, config};
 
 // GTK is single-threaded
@@ -24,7 +22,10 @@ mod imp {
 
     use adw::subclass::application_window::AdwApplicationWindowImpl;
 
-    use crate::{config, widgets::IndicatorButton};
+    use crate::{
+        config,
+        widgets::{self, IndicatorButton},
+    };
 
     use super::*;
 
@@ -34,7 +35,7 @@ mod imp {
         #[template_child]
         pub toast_overlay: TemplateChild<adw::ToastOverlay>,
         #[template_child]
-        pub drawing_area: TemplateChild<gtk::DrawingArea>,
+        pub drawing_area: TemplateChild<widgets::DrawingArea>,
         #[template_child]
         pub symbol_list: TemplateChild<gtk::ListBox>,
         #[template_child]
@@ -42,11 +43,9 @@ mod imp {
         #[template_child]
         pub indicator_button: TemplateChild<IndicatorButton>,
         pub toast: RefCell<Option<adw::Toast>>,
-        pub surface: RefCell<Option<cairo::ImageSurface>>,
         pub symbols: OnceCell<gio::ListStore>,
-        pub strokes: RefCell<Vec<classify::Stroke>>,
-        pub current_stroke: RefCell<classify::Stroke>,
-        pub sender: OnceCell<Sender<Vec<classify::Stroke>>>,
+        pub symbol_strokes: RefCell<Option<Vec<classify::Stroke>>>,
+        pub classifier: OnceCell<Sender<Vec<classify::Stroke>>>,
     }
 
     #[glib::object_subclass]
@@ -76,7 +75,7 @@ mod imp {
             });
 
             klass.install_action("win.clear", None, move |win, _, _| {
-                win.clear();
+                win.imp().drawing_area.clear();
             });
         }
 
@@ -112,7 +111,6 @@ mod imp {
                 .build();
 
             obj.setup_symbol_list();
-            obj.setup_drawing_area();
             obj.setup_classifier();
         }
 
@@ -185,7 +183,7 @@ impl HieroglyphicWindow {
     fn setup_classifier(&self) {
         let (req_tx, req_rx) = std::sync::mpsc::channel();
         let (res_tx, res_rx) = async_channel::bounded(1);
-        self.imp().sender.set(req_tx).expect("Failed to set tx");
+        self.imp().classifier.set(req_tx).expect("Failed to set tx");
         gio::spawn_blocking(move || {
             tracing::info!("Classifier thread started");
             let classifier = classify::Classifier::new().expect("Failed to setup classifier");
@@ -249,125 +247,17 @@ impl HieroglyphicWindow {
         ));
     }
 
-    fn classify(&self) {
-        let imp = self.imp();
-        let strokes = imp.strokes.borrow().clone();
-        imp.sender
+    /// Classify the given strokes.
+    #[template_callback]
+    fn classify(&self, BoxedStrokes(strokes): BoxedStrokes) {
+        // we clone the strokes to the window, so we can upload them later on
+        self.imp().symbol_strokes.replace(Some(strokes.clone()));
+        self.imp()
+            .classifier
             .get()
             .unwrap()
             .send(strokes)
             .expect("Failed to send strokes");
-    }
-
-    fn create_surface(&self, width: i32, height: i32) -> cairo::ImageSurface {
-        cairo::ImageSurface::create(cairo::Format::ARgb32, width, height)
-            .expect("Failed to create surface")
-    }
-
-    /// Returns a theme-specific color for the drawing line.
-    fn line_color(&self) -> gdk::RGBA {
-        if adw::StyleManager::default().is_dark() {
-            // #CCCCCC
-            gdk::RGBA::new(0.8, 0.8, 0.8, 1.0)
-        } else {
-            // adw @dark_2 color
-            gdk::RGBA::new(0.37, 0.36, 0.39, 1.0)
-        }
-    }
-
-    fn setup_drawing_area(&self) {
-        self.imp().drawing_area.set_draw_func(glib::clone!(
-            #[weak(rename_to = window)]
-            self,
-            move |_area: &gtk::DrawingArea, ctx: &cairo::Context, width, height| {
-                //TODO: use modern gsk path instead of cairo
-                let mut surface = window.imp().surface.borrow_mut();
-                let surface = surface.get_or_insert_with(|| window.create_surface(width, height));
-
-                ctx.set_source_surface(surface, 0.0, 0.0)
-                    .expect("Failed to set surface");
-                ctx.set_source_color(&window.line_color());
-                ctx.set_line_width(3.0);
-                ctx.set_line_cap(cairo::LineCap::Round);
-
-                let curr_stroke = window.imp().current_stroke.borrow().clone();
-                for stroke in window
-                    .imp()
-                    .strokes
-                    .borrow()
-                    .iter()
-                    .chain(std::iter::once(&curr_stroke))
-                {
-                    tracing::trace!("Drawing: {:?}", stroke);
-                    let mut looped = false;
-                    for (p, q) in stroke.points().tuple_windows() {
-                        ctx.move_to(p.x, p.y);
-                        ctx.line_to(q.x, q.y);
-                        looped = true;
-                    }
-                    ctx.stroke().expect("Failed to draw stroke");
-
-                    if !looped && stroke.points().count() == 1 {
-                        let p = stroke.points().next().unwrap();
-                        ctx.arc(p.x, p.y, 1.5, 0.0, 2.0 * std::f64::consts::PI);
-                        ctx.fill().expect("Failed to fill");
-                    }
-                }
-            }
-        ));
-    }
-
-    #[template_callback]
-    fn clear(&self) {
-        //clear previous strokes
-        self.imp().strokes.borrow_mut().clear();
-        self.imp().current_stroke.borrow_mut().clear();
-
-        self.imp().drawing_area.queue_draw();
-    }
-
-    #[template_callback]
-    fn on_resize(&self, width: i32, height: i32) {
-        //recreate surface on size change
-        self.imp()
-            .surface
-            .borrow_mut()
-            .get_or_insert_with(|| self.create_surface(width, height));
-    }
-
-    #[template_callback]
-    fn on_drag_begin(&self, x: f64, y: f64) {
-        tracing::trace!("Drag started at {},{}", x, y);
-        self.imp()
-            .current_stroke
-            .borrow_mut()
-            .add_point(classify::Point { x, y });
-        self.imp().drawing_area.queue_draw();
-    }
-
-    #[template_callback]
-    fn on_drag_update(&self, x: f64, y: f64) {
-        tracing::trace!("Drag update at {},{}", x, y);
-        let mut stroke = self.imp().current_stroke.borrow_mut();
-        //x,y refers to movements relative to start coord
-        let &classify::Point {
-            x: prev_x,
-            y: prev_y,
-        } = stroke.points().next().unwrap();
-        stroke.add_point(classify::Point {
-            x: prev_x + x,
-            y: prev_y + y,
-        });
-        self.imp().drawing_area.queue_draw();
-    }
-
-    #[template_callback]
-    fn on_drag_end(&self, x: f64, y: f64) {
-        tracing::trace!("Drag end at {},{}", x, y);
-        let stroke = self.imp().current_stroke.take();
-        self.imp().strokes.borrow_mut().push(stroke);
-        self.imp().drawing_area.queue_draw();
-        self.classify();
     }
 
     #[template_callback]
@@ -382,8 +272,9 @@ impl HieroglyphicWindow {
         tracing::debug!("Selected: {} ({})", &command, symbol.id());
         self.show_toast(gettext("Copied “{}”").replace("{}", &command));
 
-        let strokes = self.imp().strokes.borrow().clone();
-        self.try_upload_data(symbol.id(), strokes);
+        if let Some(strokes) = self.imp().symbol_strokes.take() {
+            self.try_upload_data(symbol.id(), strokes);
+        }
     }
 
     fn try_upload_data(&self, label: String, strokes: Vec<classify::Stroke>) {
