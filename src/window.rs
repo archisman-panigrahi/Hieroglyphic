@@ -74,6 +74,10 @@ mod imp {
                 let dialog: adw::Dialog = builder.object("contribution_dialog").unwrap();
                 dialog.present(Some(win));
             });
+
+            klass.install_action("win.clear", None, move |win, _, _| {
+                win.clear();
+            });
         }
 
         fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
