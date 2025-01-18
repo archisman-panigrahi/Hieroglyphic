@@ -3,9 +3,9 @@ name = "hieroglyphic"
 version = "2.0.0"
 authors = ["FineFindus <FineFindus@proton.me>"]
 edition = "2021"
-description = """Search through over 1000 different LaTeX symbols by sketching"""
+description = """Find LaTeX symbols"""
 license = "GPL-3.0"
-repository = "https://github.com/FineFindus/tex-match/"
+repository = "https://github.com/FineFindus/Hieroglyphic"
 
 [profile.release.package."*"]
 opt-level = 3
