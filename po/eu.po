@@ -1,0 +1,92 @@
+# Basque translation for hieroglyphic.
+# Copyright (C) 2024 hieroglyphic's COPYRIGHT HOLDER
+# This file is distributed under the same license as the hieroglyphic package.
+# Asier Sarasua Garmendia <asiersarasua@ni.eus>,  2024.
+#
+msgid ""
+msgstr "Project-Id-Version: hieroglyphic main\n"
+"Report-Msgid-Bugs-To: https://github.com/FineFindus/Hieroglyphic/issues\n"
+"POT-Creation-Date: 2024-09-21 03:26+0000\n"
+"PO-Revision-Date: 2024-09-21 03:26+0000\n"
+"Last-Translator: Asier Sarasua Garmendia <asiersarasua@ni.eus>\n"
+"Language-Team: Basque <eu@li.org>\n"
+"Language: eu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/io.github.finefindus.Hieroglyphic.desktop.in.in:3
+#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:8 src/about.rs:20
+#: src/main.rs:25
+msgid "Hieroglyphic"
+msgstr "Hieroglyphic"
+
+#: data/io.github.finefindus.Hieroglyphic.desktop.in.in:4
+msgid "Search through over 1000 different LaTeX symbols by sketching"
+msgstr "Egin bilaketa 1000 LaTeX ikur baino gehiagoren artean pantailan marraztuz"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/io.github.finefindus.Hieroglyphic.desktop.in.in:10
+msgid "GTK;Tools;LaTeX;TeX;Symbols;"
+msgstr "GTK;tresnak;LaTeX;TeX;ikurrak;"
+
+#: data/io.github.finefindus.Hieroglyphic.gschema.xml.in:6
+msgid "Whether to show a small nudge towards the contribution dialog"
+msgstr "Ekarpenak egin dituztenen elkarrizketa-koadroan abisu txiki bat erakutsiko den ala ez"
+
+#: data/io.github.finefindus.Hieroglyphic.gschema.xml.in:10
+msgid "Whether to contribute recognized strokes"
+msgstr "Trazu ezagunen ekarpena egin ala ez"
+
+#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:9
+msgid "Find LaTeX symbols"
+msgstr "Bilatu LaTeX ikurrak"
+
+#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:18
+msgid ""
+"If you work with LaTeX, you know it's difficult to memorize the names of all "
+"the symbols. Hieroglyphic allows you to search through over 1000 different "
+"LaTeX symbols by sketching."
+msgstr "LaTeX aplikazioarekin lan egiten baduzu, badakizu zaila dela ikur guztien izenak buruz ikastea. Hieroglyphic aplikazioaren bidez, 1000 LaTeX ikur baino gehiagoren artean egin ahal izango dituzu bilaketak haiek pantailan marraztuz."
+
+#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:24
+msgid "Main Window"
+msgstr "Leiho nagusia"
+
+#: data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in:28
+msgid "Placeholder"
+msgstr "Leku-marka"
+
+#: data/resources/ui/contribution-dialog.ui:31 data/resources/ui/window.ui:24
+msgid "Improve Hieroglyphic"
+msgstr "Hobetu Hieroglyphic"
+
+#: data/resources/ui/contribution-dialog.ui:32
+msgid ""
+"Help improve Hieroglyphic by automatically contributing recognized symbols"
+msgstr "Laguntzu Hieroglyphic aplikazioa hobetzen ikur ezagunen ekarpena eginez"
+
+#: data/resources/ui/window.ui:36
+msgid "About Hieroglyphic"
+msgstr "Hieroglyphic aplikazioari buruz"
+
+#: data/resources/ui/window.ui:50
+msgid "No Symbols"
+msgstr "Ikurrik ez"
+
+#: data/resources/ui/window.ui:51
+msgid "Start by drawing a symbol"
+msgstr "Hasi ikur bat marrazten"
+
+#: data/resources/ui/window.ui:118
+msgid "_Clear"
+msgstr "_Garbitu"
+
+#. Translators: This should not be translate, Please enter your credits here instead (format: "Name https://example.com" or "Name <email@example.com>", no quotes)
+#: src/about.rs:26
+msgid "translator-credits"
+msgstr "Asier Sarasua Garmendia <asiersarasua@ni.eus>"
+
+#: src/window.rs:378
+msgid "Copied “{}”"
+msgstr "“{}” kopiatu da"
