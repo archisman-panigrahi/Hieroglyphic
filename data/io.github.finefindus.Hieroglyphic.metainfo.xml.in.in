@@ -39,6 +39,17 @@
   <content_rating type="oars-1.1" />
 
   <releases>
+    <release version="2.1.0" date="2025-01-25">
+      <description>
+        <p>This updates improves symbols classification, as fixing some bugs.</p>
+        <ul>
+          <li>Updates the drawing area to use GPU rendering</li>
+          <li>Shortcuts to clear the drawing area should now work again</li>
+          <li>Updated translations</li>
+          <li>Improved metadata for app stores</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.0.0" date="2024-10-08">
       <description>
         <p>This update brings significant improvements to the classification system:</p>
