@@ -21,16 +21,18 @@ from pymongo import MongoClient
 #
 
 SIZE = 32
-MONGODB_URI = os.getenv('MONGODB_URI')
+MONGODB_URI = os.getenv("MONGODB_URI")
 if not MONGODB_URI:
-    sys.exit("Error: No DB URI found. Please set the `MONGODB_URI` environment variable.")
+    sys.exit(
+        "Error: No DB URI found. Please set the `MONGODB_URI` environment variable."
+    )
 
 
 try:
     print("Connecting to the database...")
     # establish connection to the database
     client = MongoClient(MONGODB_URI)
-    symbol_collection = client['hieroglyphic-prod']['symbols']
+    symbol_collection = client["hieroglyphic-prod"]["symbols"]
 except Exception as e:
     sys.exit(f"Error: Failed to connect to MongoDB: {e}")
 
@@ -40,9 +42,12 @@ print("Reading training data")
 symbol_to_stroke_samples = {}
 cursor = symbol_collection.find()
 for symbol in cursor:
-   label = symbol['label']
-   samples = symbol['samples']
-   symbol_to_stroke_samples[label] = [[[(point['x'], point['y']) for point in points] for points in sample['strokes']] for sample in samples]
+    label = symbol["label"]
+    samples = symbol["samples"]
+    symbol_to_stroke_samples[label] = [
+        [[(point["x"], point["y"]) for point in points] for points in sample["strokes"]]
+        for sample in samples
+    ]
 
 print(f"Found {len(symbol_to_stroke_samples.keys())} different class")
 # close db connection
@@ -65,6 +70,7 @@ def draw_image(strokes):
             draw.point(scaled_stroke, fill=255)
 
     return image
+
 
 created_counter = 0
 counter = 0
@@ -91,9 +97,9 @@ print(f"Created {created_counter} images")
 # split data into training data
 print("Splitting data")
 
-os.makedirs(f"images_data{SIZE}/train", exist_ok = True)
-os.makedirs(f"images_data{SIZE}/val", exist_ok = True)
-os.makedirs(f"images_data{SIZE}/test", exist_ok = True)
+os.makedirs(f"images_data{SIZE}/train", exist_ok=True)
+os.makedirs(f"images_data{SIZE}/val", exist_ok=True)
+os.makedirs(f"images_data{SIZE}/test", exist_ok=True)
 
 random.seed(0)
 files = []
@@ -104,9 +110,9 @@ for root, dirs, files in os.walk(f"images{SIZE}"):
         pick = random.random()
 
         # ensure the class directory exists
-        os.makedirs(f"images_data{SIZE}/train/{label}", exist_ok = True)
-        os.makedirs(f"images_data{SIZE}/val/{label}", exist_ok = True)
-        os.makedirs(f"images_data{SIZE}/test/{label}", exist_ok = True)
+        os.makedirs(f"images_data{SIZE}/train/{label}", exist_ok=True)
+        os.makedirs(f"images_data{SIZE}/val/{label}", exist_ok=True)
+        os.makedirs(f"images_data{SIZE}/test/{label}", exist_ok=True)
         image_path = os.path.join(root, image_file)
 
         # skip empty files
@@ -116,19 +122,31 @@ for root, dirs, files in os.walk(f"images{SIZE}"):
 
         # make sure at least one of every class is in each split
         if len(os.listdir(f"images_data{SIZE}/train/{label}")) == 0:
-            copyfile(image_path, os.path.join(f"images_data{SIZE}/train/{label}", image_file))
+            copyfile(
+                image_path, os.path.join(f"images_data{SIZE}/train/{label}", image_file)
+            )
         if len(os.listdir(f"images_data{SIZE}/val/{label}")) == 0:
-            copyfile(image_path, os.path.join(f"images_data{SIZE}/val/{label}", image_file))
+            copyfile(
+                image_path, os.path.join(f"images_data{SIZE}/val/{label}", image_file)
+            )
         if len(os.listdir(f"images_data{SIZE}/test/{label}")) == 0:
-            copyfile(image_path, os.path.join(f"images_data{SIZE}/test/{label}", image_file))
+            copyfile(
+                image_path, os.path.join(f"images_data{SIZE}/test/{label}", image_file)
+            )
 
         # otherwise, choose a split to add the image to
         if pick < 0.7:
-            copyfile(image_path, os.path.join(f"images_data{SIZE}/train/{label}", image_file))
+            copyfile(
+                image_path, os.path.join(f"images_data{SIZE}/train/{label}", image_file)
+            )
         elif pick < 0.9:
-            copyfile(image_path, os.path.join(f"images_data{SIZE}/val/{label}", image_file))
+            copyfile(
+                image_path, os.path.join(f"images_data{SIZE}/val/{label}", image_file)
+            )
         else:
-            copyfile(image_path, os.path.join(f"images_data{SIZE}/test/{label}", image_file))
+            copyfile(
+                image_path, os.path.join(f"images_data{SIZE}/test/{label}", image_file)
+            )
 
 # combine directories in tar file, so it can easily be uploaded for training
 with tarfile.open("images.tar.xz", "w:xz") as tar:
