@@ -1,10 +1,11 @@
 import os
 import random
 import tarfile
-import json
+import sys
 from shutil import copyfile
 from PIL import Image, ImageDraw
 from pathlib import Path
+from pymongo import MongoClient
 
 # adapted from https://j3698.github.io/extexify/training-the-symbol-recognizer
 
@@ -19,19 +20,33 @@ from pathlib import Path
 # 3. Replace the model in the data directory
 #
 
-FILE_PATH = 'training_data.json'
 SIZE = 32
+MONGODB_URI = os.getenv('MONGODB_URI')
+if not MONGODB_URI:
+    sys.exit("Error: No DB URI found. Please set the `MONGODB_URI` environment variable.")
+
+
+try:
+    print("Connecting to the database...")
+    # establish connection to the database
+    client = MongoClient(MONGODB_URI)
+    symbol_collection = client['hieroglyphic-prod']['symbols']
+except Exception as e:
+    sys.exit(f"Error: Failed to connect to MongoDB: {e}")
 
 print("Reading training data")
 # map from key to list of stroke samples
 # each stroke sample is a list of strokes, which is a list of points
 symbol_to_stroke_samples = {}
+cursor = symbol_collection.find()
+for symbol in cursor:
+   label = symbol['label']
+   samples = symbol['samples']
+   symbol_to_stroke_samples[label] = [[[(point['x'], point['y']) for point in points] for points in sample['strokes']] for sample in samples]
 
-with open(FILE_PATH, 'r') as json_file:
-    data = json.load(json_file)
-    for symbol_key, symbol_data in data.items():
-        symbol_to_stroke_samples[symbol_key] = [[[(point['x'], point['y']) for point in points] for points in value['strokes']] for value in symbol_data]
 print(f"Found {len(symbol_to_stroke_samples.keys())} different class")
+# close db connection
+client.close()
 
 
 def draw_image(strokes):
@@ -93,6 +108,11 @@ for root, dirs, files in os.walk(f"images{SIZE}"):
         os.makedirs(f"images_data{SIZE}/val/{label}", exist_ok = True)
         os.makedirs(f"images_data{SIZE}/test/{label}", exist_ok = True)
         image_path = os.path.join(root, image_file)
+
+        # skip empty files
+        if os.path.getsize(image_path) == 0:
+            print(f"[WARNING]: found empty file {image_path}")
+            continue
 
         # make sure at least one of every class is in each split
         if len(os.listdir(f"images_data{SIZE}/train/{label}")) == 0:
