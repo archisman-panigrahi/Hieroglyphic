@@ -4,8 +4,8 @@ data/io.github.finefindus.Hieroglyphic.metainfo.xml.in.in
 data/resources/ui/contribution-dialog.ui
 data/resources/ui/symbol-item.ui
 data/resources/ui/window.ui
-src/about.rs
 src/application.rs
 src/main.rs
-src/symbol_item.rs
+src/widgets/about.rs
+src/widgets/symbol_item.rs
 src/window.rs
