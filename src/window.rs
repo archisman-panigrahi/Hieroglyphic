@@ -149,14 +149,6 @@ impl HieroglyphicWindow {
         self.imp().toast_overlay.add_toast(toast);
     }
 
-    /// Returns the symbols list store object.
-    fn symbols(&self) -> &gio::ListStore {
-        self.imp()
-            .symbols
-            .get()
-            .expect("`symbols` should be initialized in `setup_symbol_list`")
-    }
-
     fn setup_symbol_list(&self) {
         let model = gio::ListStore::new::<gtk::StringObject>();
 
@@ -226,14 +218,21 @@ impl HieroglyphicWindow {
                 tracing::debug!("Listening for classifications");
                 while let Ok(Some(classifications)) = res_rx.recv().await {
                     window.imp().stack.set_visible_child_name("symbols");
-                    let symbols = window.symbols();
-                    symbols.remove_all();
+                    let mut symbols = window
+                        .imp()
+                        .symbols
+                        .get()
+                        .cloned()
+                        .expect("`symbols` should be initialized in `setup_symbol_list`");
 
+                    symbols.remove_all();
                     // switching out all 1k symbols takes too long, so only display the first 25
-                    // TODO: find faster ways and display all
-                    for symbol in classifications.iter().take(25) {
-                        symbols.append(&gtk::StringObject::new(symbol))
-                    }
+                    symbols.extend(
+                        classifications
+                            .into_iter()
+                            .take(25)
+                            .map(&gtk::StringObject::new),
+                    );
                     // scroll to top after updating symbols, so that the most likely symbols are
                     // visible first
                     window
